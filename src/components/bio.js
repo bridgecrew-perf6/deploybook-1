@@ -34,7 +34,7 @@ function Bio() {
               }}
             />
             <p>
-              by <strong>Joe Walsh</strong>.{` `}
+              by <strong>{author}</strong>.{` `}
             </p>
           </Container>
         );
