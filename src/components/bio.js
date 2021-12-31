@@ -35,9 +35,6 @@ function Bio() {
             />
             <p>
               by <strong>Joe Walsh</strong>.{` `}
-              <a href={`https://twitter.com/${social.twitter}`}>
-                Follow me on Twitter
-              </a>
             </p>
           </Container>
         );
