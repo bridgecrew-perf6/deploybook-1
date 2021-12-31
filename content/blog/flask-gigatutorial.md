@@ -11,7 +11,9 @@ Both the structure and content of this book are shamelessly based on Miguel Grin
 
 In the first part of this book, we will move the present blank page to, at the end, having a website, with a domain name, served over https on nginx and gunicorn, on a cheap remote linux server provided by Digital Ocean.
 
-assumptions: I am writing this with as few assumptions as possible you will have to pay digital ocean, you may have to pay for dns,
+assumptions: I am writing this with as few assumptions as possible about your experience with programming or deploying code to websites.
+
+However, there are two requirements: first, the following you will have to pay digital ocean, you may have to pay for dns,
 
 Term of art slurry:
 nginx
@@ -21,3 +23,9 @@ digital ocean
 https
 let's encrypt
 git & github
+
+### Finding an Ubuntu Server
+
+If you would like to follow along with me, you will need to find a server to work on. As of the end of 2021, [Digital Ocean](https://www.digitalocean.com/) will provide you a Ubuntu 20.04 server for around $5 per month.  (My experience: in writing the book I made frequent changes to my server and the total cost for the month was under $4.)
+
+[do server configuration tutorial](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04)
