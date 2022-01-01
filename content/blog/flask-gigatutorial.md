@@ -10,6 +10,9 @@ description: in-depth deployment tutorial for Flask, Python, Postgres, Digital O
     - [ ] wrap in introspection
     - [ ] set up linux computer and follow along with my own work making notes
     - [ ] oswap link & discussion of security: leave it to the experts (but don't ignore)
+    [owasp top10](https://owasp.org/www-project-top-ten/)
+
+### Hello World
 
 Welcome! You are about to start on a journey toward deploying a working web application with Python, Flask, and Postgres. When you have finished, this application will be live on the web and you will be able to access it from your phone or computer anywhere you have internet access.
 
@@ -112,12 +115,39 @@ $ su gigaflask
 //"su" stands for "switch user", so command tells current command-line session to switch current user from root to gigaflask.
 ```
 
+With the new user "gigaflask" created, the next step is to configure public key authentication. Once this is configured you will no longer have to type a password when logging in to your server from ssh.
+
+Configuring public key authentication is one of the most intimidating steps of configuring a deployment. The process involves manipulating weird, long numbers with terminal commands with which you may not have familiarity. Furthermore, the terms "key", "authentication", and "private" raise the anxiety level; if I do this wrong will hackers get into my server? can I fix this if I mess up? Please rest assured however that nothing you are doing in this step of the deployment is irrevocable. Stripped of the terms of art the process itself is fundamentally a simple one.
+
+I will walk through the basic steps of generating a public key on your local computer and then configuring your remote server to accept this form of authentication. You may want to read through all the steps before beginning. After we have gone through the steps I will provide some ways to look into the components of public key authentication to determine whether you are configured correctly.
+
+If you have been following along with this project, you will still be logged into the remote after create the new user "gigaflask". Since the next step requires that you create a private key on your local computer, you will need to open a second terminal window (and do not log into the remote server).
+
+In the second terminal window, we will be checking the contents of the ~/.ssh directory to determine whether or not you ALREADY have a private key.
+
+```
+$ ls ~/.ssh  //lists contents of ~/.ssh folder
+
+```
+
+If the result of the above command returns <i>id_rsa</i> and <i>id_rsa.pub</i> then you already have a key and can use this key to configure the remote server.
+
+However, if the above command does not return the two files OR if you do not have an ~/.ssh directory at all, you will need to create an SSH keypair by using a utility called <i>ssh-keygen</i>.
+
+```
+$ ssh-keygen
+//command to start the procedure for creating a keygen
+```
+
+//what are the questions?
+
 Further Reading:
 
 - [OpenSSH Server Documentation from Ubuntu](https://ubuntu.com/server/docs/service-openssh)
 - linux tutorial (need to emphasize this)
 - why is passwordless more secure?
 - what is root?
+- what is public key authentication?
 
 ### Installing and Configuring Firewall & Exposing Ports
 
