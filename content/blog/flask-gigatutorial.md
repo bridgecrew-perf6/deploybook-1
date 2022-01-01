@@ -141,9 +141,39 @@ $ ssh-keygen
 
 //what are the questions?
 
+After you have finished the ssh-keygen steps, you should check that you have an <i>~/.ssh</i> directory, an <i>id_rsa</i> file, and an <i>id_rsa.pub</i>file.
+
+The <i>id_rsa.pub</i> file is your public key (notice .pub ending) and this is the key you will provide to your remote server in the next step. DigitalOcean and other third parties will use this key as a way to verify your identity. The <i>id_rsa</i> file is your private key, you will keep this file and its cryptographic contents on your computer. You should not give this key to anyone.
+
+In the next step, we will use the <i>cat</i> command to view the contents of your public key file (<i>id_rsa.pub</i>).
+
+```
+$ cat ~/.ssh/id_rsa.pub
+
+//if you were successful generating a
+private key in the prior step you will
+see a very long series of letters and
+numbers that is the content of your
+public rsa key followed by your laptop name.
+
+//Example public key output:
+ssh-rsa AAAAB3NzaD1fc2EAAABAQCjw....F9lXv5f/9+8YD joe@joelaptop
+
+```
+
+In the next step we will be copying this key to a location in the directory structure of your remote server.
+
+Thus, first copy the public key you just generated to the clipboaord. Then, return to the original terminal window (the one logged into the remote server). Finally, issues the following command.
+
+```
+$ echo <paste-YOUR-public-key> >> ~/.ssh/authorized_keys
+$ chmod 600 ~/.ssh/authorized_keys
+```
+
 Further Reading:
 
 - [OpenSSH Server Documentation from Ubuntu](https://ubuntu.com/server/docs/service-openssh)
+- [how often should I rotate my ssh keys](https://tailscale.com/blog/rotate-ssh-keys/)
 - linux tutorial (need to emphasize this)
 - why is passwordless more secure?
 - what is root?
