@@ -5,6 +5,11 @@ title: flask giga tutorial
 description: in-depth deployment tutorial for Flask, Python, Postgres, Digital Ocean, Nginx, Gunicorn and more!
 ---
 
+### TODO
+
+    - [ ] wrap in introspection
+    - [ ] set up linux and follow along with my own work making notes
+
 Welcome! You are about to start on a journey toward deploying a working web application with Python, Flask, and Postgres. When you have finished, this application will be live on the web and you will be able to access it from your phone or computer anywhere you have internet access.
 
 Both the structure and content of this book are shamelessly based on Miguel Grinberg's [Flask Mega-Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world). While the focus of this book is on exploring and explaining the surplus of non-obvious tasks required to get a Flask application onto the internet, it should be treated as something of an extended application of the lesson in Chapter 17 of the Mega-Tutorial that provides much more context for the many, many steps of deploying.
@@ -34,11 +39,11 @@ first order security concerns: firewall, secret key,
 
 A minimal Flask application, in this context, means a small amount of code that will allow us to demonstrate and test our configuration on the remote server.
 
-[link to github v1 #todo]()
+[link to github v1 #todo](https://github.com/redmonroe/deploy-linux/tree/v0.1)
 
 ### Trying Flask Application Locally
 
-Soon enough we will be sending the code to our remote. However, if this is your first experience with Flask, you may want to clone a copy of the minimal Flask app and experiment with it on your computer at home.
+Soon enough we will be sending the code to your remote. However, if this is your first experience with Flask, you may want to clone a copy of the minimal Flask app and experiment with it on your computer at home.
 
 The code for this section can be had at [https://github.com/redmonroe/deploy-linux/tree/v0.1](https://github.com/redmonroe/deploy-linux/tree/v0.1).
 
@@ -49,11 +54,17 @@ If you would like to follow along with me, you will need to find a server to wor
 Once you have created a new Ubuntu 20.04 server in a Digital Ocean(DO) droplet, you spend a moment to familiarize yourself with the DO administrative controls. The first step you should take to configure your server will require you to know what the IP address of your remote virtual server (what DO calls a "droplet").
 
 ```
-You can find you IP address either by clicking on [Your-Project-Name] under "Projects" in the sidebar of the DO admin panel
-OR by clicking on "Droplets" in the sidebar of the DO admin panel.
+You can find you IP address either by clicking on
+[Your-Project-Name] under "Projects" in the sidebar
+of the DO admin panel
+OR
+by clicking on "Droplets" in the sidebar of the DO admin panel.
 
-There you will find beneath the header "IP Address" the address in the form XX.XXX.XXX.XX.
+There you will find - beneath the header "IP Address" -
+the address in the form XX.XXX.XXX.XX.
 
+Make sure you can find this address as you will
+be using it in the following sections.
 
 ```
 
@@ -61,8 +72,29 @@ There you will find beneath the header "IP Address" the address in the form XX.X
 
 ### Login via SSH, Password
 
-what is SSH?  
-how do you introspect SSH? /where are my certifications stored?
+Since your server is headless, you will not have a desktop interface that you may be used to on your own computer. Instead you will connect to your remote server through an SSH client and send instructions to your server via the command-line. Windows Subsystem for Linux 2 provides OpenSSH by default.
+
+```
+To verify installation of OpenSSH: ssh -V
+// should return something like
+//OpenSSH_8.2p1 Ubuntu-4ubuntu0.3, OpenSSL 1.1.1f  31 Mar 2020
+
+Alternately, you can get a list of all packages installed
+by using: dpkg --list.  Scrolling down you some ways should show you packages called "openssh-client" and "openssh-server".
+```
+
+Using ssh with your server's IP address from the command-line, you will now be able to log into your remote server.
+
+```
+$ ssh root@<your-server-ip-address>
+```
+
+/what is the password situation during initial login for DO?
+/where are my certifications stored?
+
+Further Reading:
+
+- [OpenSSH Server Documentation from Ubuntu](https://ubuntu.com/server/docs/service-openssh)
 
 ### Installing and Configuring Firewall & Exposing Ports
 
