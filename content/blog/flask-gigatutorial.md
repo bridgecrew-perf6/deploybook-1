@@ -8,7 +8,8 @@ description: in-depth deployment tutorial for Flask, Python, Postgres, Digital O
 ### TODO
 
     - [ ] wrap in introspection
-    - [ ] set up linux and follow along with my own work making notes
+    - [ ] set up linux computer and follow along with my own work making notes
+    - [ ] oswap link & discussion of security: leave it to the experts (but don't ignore)
 
 Welcome! You are about to start on a journey toward deploying a working web application with Python, Flask, and Postgres. When you have finished, this application will be live on the web and you will be able to access it from your phone or computer anywhere you have internet access.
 
@@ -70,7 +71,7 @@ be using it in the following sections.
 
 [do server configuration tutorial](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04)
 
-### Login via SSH, Password
+### Login via SSH
 
 Since your server is headless, you will not have a desktop interface that you may be used to on your own computer. Instead you will connect to your remote server through an SSH client and send instructions to your server via the command-line. Windows Subsystem for Linux 2 provides OpenSSH by default.
 
@@ -89,12 +90,34 @@ Using ssh with your server's IP address from the command-line, you will now be a
 $ ssh root@<your-server-ip-address>
 ```
 
-/what is the password situation during initial login for DO?
+//You may be prompted to enter a password. What is DO behavior at this stage?
 /where are my certifications stored?
+/what is the password situation & pitfalls during initial login for DO?
+
+### PasswordLess Login
+
+Instead of continuting to log in as root (that is, the "root" in ssh root@your-server-ip-address), you will be configuring your server to log you in without a password. Instead of using a password, you will use public key authentication in order to verify your identity to your remote server. This method is both more convenient and more secure.
+
+To begin, you should come up with a new username that you would like to use as your username when logging into your server. For the purpose of the illustration in the following examples, I will be using the new user name of "gigaflask" but you are welcome to substitute your own username.
+
+```
+$ adduser -gecos gigaflask
+//creates new user "gigaflask", -gecos flag disables requirement
+to provide information such as name and phone number for GECOS field in passwd file
+
+$ usermod -aG sudo gigaflask
+//grants superuser privileges to user "gigaflask"
+
+$ su gigaflask
+//"su" stands for "switch user", so command tells current command-line session to switch current user from root to gigaflask.
+```
 
 Further Reading:
 
 - [OpenSSH Server Documentation from Ubuntu](https://ubuntu.com/server/docs/service-openssh)
+- linux tutorial (need to emphasize this)
+- why is passwordless more secure?
+- what is root?
 
 ### Installing and Configuring Firewall & Exposing Ports
 
