@@ -5,12 +5,16 @@ title: flask giga tutorial
 description: in-depth deployment tutorial for Flask, Python, Postgres, Digital Ocean, Nginx, Gunicorn and more!
 ---
 
-### TODO
+TODO
 
+    - [ ] get rid of other blog posts on site
+    - [ ] how do I want to handle initial flask steps
+    - [ ] how do I want to handle text editors on remote *vim* and *nano*
     - [ ] wrap in introspection
-    - [ ] set up linux computer and follow along with my own work making notes
+    - [ ] set up linux computer and follow along with my own work making notes (I can do this with)
     - [ ] oswap link & discussion of security: leave it to the experts (but don't ignore)
     [owasp top10](https://owasp.org/www-project-top-ten/)
+    - [ ] does debug server matter to this type of flask deployment?
 
 ### Hello World
 
@@ -181,6 +185,50 @@ $ ssh gigaflask@<your-server-ip-address>
 
 If your work has been successful you should not have to enter a password and (depending on your bash configuration) you will see <i>gigaflask@your-server-ip-address</i> at the prompt in your terminal.
 
+### Server Security: First Steps
+
+We are now going to take three steps to reduce the number of methods by which an attacker could gain access to your remote server. First, we are going to disable root logins via <i>ssh</i>. Second, we are going to disable login for all accounts on the remote server. Third, and finally, we are going to install a firewall on the remote server. Firewall software protects your server by blocking access to the server on ports that are not explicitly enabled by you.
+
+In the next two steps, we are going to be making two small changes to the text in a configuration file located at _/etc/ssh/sshd_config_.
+
+Because this file is located on your remote server, you will probably not have access to your regular text editor or IDE that you are used to using to make changes in the text. There are many ways to handle this issues; the simplest method is to simply use the _nano_ editor that is provided in (nearly) all installations of Linux.
+
+To disable root logins via _ssh_, first you will log back into your remote server:
+
+```
+$ ssh gigaflask@your-server-ip-address
+$ sudo nano /etc/ssh/sshd_config  //this will open the SSH configuration file
+```
+
+Once open you should scroll down inside the terminal-based _nano_ editor window to the line that starts with ==PermitRootLogin==. There you will change the value to ==no==.
+
+The second change you will make is located in the same file. Once you have made this change you will have disabled all password logins for all accounts. Since you have already enabled password-less logins via public key authentication there is no need to permit password authentication on your remote server at all.
+
+To make this change - while still in your _nano_ session inside _sshd_config_ - scroll to the line ==PasswordAuthentication==. There you will change the value to ==no==.
+
+To complete the configuration of these two values, you will restart SSH so that the change will take effect.
+
+```
+$ sudo service ssh restart //this stops ssh and starts it again; initializing the changes.
+```
+
+The third change you will make is to install a firewall. The following commands install the Uncomplicated Firewall(ufw) and configure it to block access to all ports with the exception of port 22(ssh), port 80(http), and port 443(https) which we will explicitly enable.
+
+```
+$ sudo apt-get install -y ufw //installs ufw
+$ sudo ufw allow ssh //open port 22
+$ sudo ufw allow http //open port 80
+$ sudo ufw allow 443/tcp //open port 443
+$ sudo ufw --force enable //enable command reloads ufw and enables firewall on boot, force command disables interactive script
+
+```
+
+Once you have completed these steps you can check your work with:
+
+```
+$ sudo ufw status //will show active if your install and configuration were successfull
+```
+
 Further Reading:
 
 - [OpenSSH Server Documentation from Ubuntu](https://ubuntu.com/server/docs/service-openssh)
@@ -189,6 +237,7 @@ Further Reading:
 - why is passwordless more secure?
 - what is root?
 - what is public key authentication?
+- [An Introduction to Uncomplicated Firewall](https://www.linux.com/training-tutorials/introduction-uncomplicated-firewall-ufw/)
 
 ### Installing and Configuring Firewall & Exposing Ports
 
