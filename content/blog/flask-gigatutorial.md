@@ -166,9 +166,20 @@ In the next step we will be copying this key to a location in the directory stru
 Thus, first copy the public key you just generated to the clipboaord. Then, return to the original terminal window (the one logged into the remote server). Finally, issues the following command.
 
 ```
-$ echo <paste-YOUR-public-key> >> ~/.ssh/authorized_keys
-$ chmod 600 ~/.ssh/authorized_keys
+$ echo <paste-YOUR-public-key> >> ~/.ssh/authorized_keys  //the echo command displays a line of text and combined with ">>"; it "displays" the line of text into the authorized_keys file
+
+$ chmod 600 ~/.ssh/authorized_keys //chmod stands for "change mode of access" and allows a Ubuntu/Linux user to change who and how much access a user has.  600 is an argument passed to chmod command.  It gives the owner full read and write access to the target file, here authorized_keys, while preventing any other user from accessing the file.
 ```
+
+Once you have entered these commands, you will be able to log into your remote server without a password. From now on, when you log into the remote server <i>ssh</i> will identify itself to the remote server and trigger a cryptographic procedure that requires a public key. The remote server then checks that the procedure is correct and that you are verified by referrencing the public key which you have just provided.
+
+To check work, you should first log out of both your <i>ssh</i> session and your remote session. Then you will attempt to login directly to your "gigaflask" account by entering
+
+```
+$ ssh gigaflask@<your-server-ip-address>
+```
+
+If your work has been successful you should not have to enter a password and (depending on your bash configuration) you will see <i>gigaflask@your-server-ip-address</i> at the prompt in your terminal.
 
 Further Reading:
 
