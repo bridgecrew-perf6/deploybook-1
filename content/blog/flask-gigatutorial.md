@@ -331,14 +331,26 @@ Further Reading:
 
 -[git for beginners](http://ryanflorence.com/git-for-beginners/)
 
-### Configuring Nginx
+### Configuring Nginx: SSL Certificate
 
 Your Flask application is now served by _gunicorn_ on its own private 8000 port according to the configuration code you wrote into the _supervisor_ configuration file in the prior passage. To continue your deployment, you will next need to expose your application to the wider world by enabling another web server, called _nginx_, to allow access via ports 80 and 443. If you remember these are the same ports that you configured your firewall to open.
 
 We are going to configure port 80 to forward all traffic to port 443; port 443 being the channel for encrypted traffic under HTTPS. In order to use HTTPS, you will need an SSL certificate. Later, we will walk through the process of obtaining a REAL SSL certificate from the certificated authority Let's Encrypt but for now we will use a _self-signed SSL certificate_. This is sufficient for our purposes of practicing the steps of deployment. However, please be aware that with a self-signed certificate that your browser will warn you and any users of the site that the certificate is not trusted.
 
-In any case, the command to create the SSL certificate is:
+In any case, the following command will create an SSL certificate for your project. You should execute this function from the root directory of your Flask project on your remote server. Be aware: the following command is going to ask you for information about your idenity and application that will be included in the SSL certificate. Web browsers will show this information to users if they request to see it (by, for example, clicking on the little lock icon in the far left of the Chrome Omnibar).
 
 ```
+$ mkdir certs //make a new directory called "certs"
+$ openssl req -new -newkey rsa:4096 -day 365 \
+- nodes -x509 -keyout certs/key.pem -out certs/cert.pem
+```
+
+This command results in to files being created in your project's root directory called _key.pem_ and another in the folder just created called _certs_ called _cert.pem_. To verify the existence of these files, you can check with:
 
 ```
+$ ls -a  //you should see a file called key.pem and a sub-directory called certs.
+```
+
+### Configuring Nginx: Nginx Config File
+
+In order to serve your project with nginx, you will need to create a configuration file.
