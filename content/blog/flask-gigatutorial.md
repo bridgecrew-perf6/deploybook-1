@@ -226,7 +226,7 @@ $ sudo ufw --force enable //enable command reloads ufw and enables firewall on b
 Once you have completed these steps you can check your work with:
 
 ```
-$ sudo ufw status //will show active if your install and configuration were successfull
+    $ sudo ufw status //will show active if your install and configuration were successful.
 ```
 
 Further Reading:
