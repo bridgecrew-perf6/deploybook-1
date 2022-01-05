@@ -239,9 +239,17 @@ Further Reading:
 - what is public key authentication?
 - [An Introduction to Uncomplicated Firewall](https://www.linux.com/training-tutorials/introduction-uncomplicated-firewall-ufw/)
 
-### Installing and Configuring Firewall & Exposing Ports
-
 ### Install Dependencies
+
+Since you have deployed into a Ubuntu 20.04 Server on your DigitalOcean remote server, you have a system that - as of the date of this writing - comes with Python 3.8.
+
+In addition to Python, we are going to install additional packages that will add further functionality to our eventual deployment and also make deploying more convenient.
+
+```
+$ sudo apt-get -y update
+$ sudo apt-get -y install python3 python3-venv python3-dev
+$ sudo apt-get -y install supervisor nginx git
+```
 
 why are some from apt-get and some from pip?
 
