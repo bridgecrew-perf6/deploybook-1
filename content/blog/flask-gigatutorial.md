@@ -287,19 +287,19 @@ When you start your Flask server with _flask run_, you are using the simple deve
 
 If you want to simply start _gunicorn_, you can use the following command.
 
-````
+```
 (venv) $ gunicorn -b localhost:8000 -w 4 [WHICH ONE IS THIS: WHICH ONE IS THIS]
 
 ```
 
 //-b tells gunicorn on which port to listen for requests, here port 8000.
-//-w configures how many workers gunicorn will run, here we have configured 4.  While having more workers will increase the number of clients your application can handle, if you have more workers than can be handled by the amount of RAM on your remote server you will experience performance issues and you will then need to adjust down the number of workers you provide.
+//-w configures how many workers gunicorn will run, here we have configured 4. While having more workers will increase the number of clients your application can handle, if you have more workers than can be handled by the amount of RAM on your remote server you will experience performance issues and you will then need to adjust down the number of workers you provide.
 
-The *app:app* argument tells *gunicorn* how to load the application instance.  *** WHY CAN'T I GET THIS TO MAP TO GRINBERG'S CODE V. MY DEPLOY-LINUX CODE?
+The _app:app_ argument tells _gunicorn_ how to load the application instance. \*\*\* WHY CAN'T I GET THIS TO MAP TO GRINBERG'S CODE V. MY DEPLOY-LINUX CODE?
 
-The main drawback against running *gunicorn* from the command-line is that if your remote server crashes, you will need to manually restart your application.  Instead, we are going to use the *supervisor* package, which we have already installed to ensure that our Flask application starts when the remote server is rebooted.
+The main drawback against running _gunicorn_ from the command-line is that if your remote server crashes, you will need to manually restart your application. Instead, we are going to use the _supervisor_ package, which we have already installed to ensure that our Flask application starts when the remote server is rebooted.
 
-*supervisor* uses a configuration file that configures what programs to wathc and how to restart them when it is necessary.  *supervisor* stores its configuration file in */etc/supervisor/conf.d/*.  We are going to make a configuration file called *deploy.conf* and store the following code.
+_supervisor_ uses a configuration file that configures what programs to wathc and how to restart them when it is necessary. _supervisor_ stores its configuration file in _/etc/supervisor/conf.d/_. We are going to make a configuration file called _deploy.conf_ and store the following code.
 
 ```
 [program:deploy]
@@ -312,48 +312,32 @@ stopasgroup=true
 killasgroup=true
 ```
 
-If you used a username other than gigaflask when you configured your username for your remote server, you should substitute that username for "gigaflask" in the above code.  Also, if you cloned your own version of the minimal Flask app for this deployment, you will you use that folder name in place of "deploy-linux".
+If you used a username other than gigaflask when you configured your username for your remote server, you should substitute that username for "gigaflask" in the above code. Also, if you cloned your own version of the minimal Flask app for this deployment, you will you use that folder name in place of "deploy-linux".
 
 //need an edit bad, this is a direct copy paste
 The command, directory and user settings tell supervisor how to run the application. The autostart and autorestart set up automatic restarts due to the computer starting up, or crashes. The stopasgroup and killasgroup options ensure that when supervisor needs to stop the application to restart it, it also reaches the child processes of the top-level gunicorn process.
 
-Once you have saved the changes to your new *supervisor* configuration file, you can restart the supervisor service with the following command.
+Once you have saved the changes to your new _supervisor_ configuration file, you can restart the supervisor service with the following command.
 
 ```
 $ sudo supervisorctl reload
 ```
-Now your application should be running under the watchful eye of the *supervisor* package.
 
-///
+Now your application should be running under the watchful eye of the _supervisor_ package.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+///how to introspect whether any of this is working? I think I have good notes and practices on this
 
 Further Reading:
 
 -[git for beginners](http://ryanflorence.com/git-for-beginners/)
 
-````
+### Configuring Nginx
+
+Your Flask application is now served by _gunicorn_ on its own private 8000 port according to the configuration code you wrote into the _supervisor_ configuration file in the prior passage. To continue your deployment, you will next need to expose your application to the wider world by enabling another web server, called _nginx_, to allow access via ports 80 and 443. If you remember these are the same ports that you configured your firewall to open.
+
+We are going to configure port 80 to forward all traffic to port 443; port 443 being the channel for encrypted traffic under HTTPS. In order to use HTTPS, you will need an SSL certificate. Later, we will walk through the process of obtaining a REAL SSL certificate from the certificated authority Let's Encrypt but for now we will use a _self-signed SSL certificate_. This is sufficient for our purposes of practicing the steps of deployment. However, please be aware that with a self-signed certificate that your browser will warn you and any users of the site that the certificate is not trusted.
+
+In any case, the command to create the SSL certificate is:
 
 ```
 
