@@ -331,6 +331,12 @@ Further Reading:
 
 -[git for beginners](http://ryanflorence.com/git-for-beginners/)
 
+### Domain Name and DNS
+
+Because we are going to use our domain name in the configuration of nginx, our production server. The next step is to set up our domain name and link our DigitalOcean server to our new domain. There are many sites from which you can obtain a domain name, both paid and free. While I do not endorse any site, I have experience with [Namecheap](www.namecheap.com) so if you'd like to follow along, we will be using that site.
+
+You will be required to pay Namecheap for a domain name. The costs for this domain name starts around $5.  I was able to get a domain in the name of my business for about $8 a year (at least for the first year).
+
 ### Configuring Nginx: SSL Certificate
 
 Your Flask application is now served by _gunicorn_ on its own private 8000 port according to the configuration code you wrote into the _supervisor_ configuration file in the prior passage. To continue your deployment, you will next need to expose your application to the wider world by enabling another web server, called _nginx_, to allow access via ports 80 and 443. If you remember these are the same ports that you configured your firewall to open.
