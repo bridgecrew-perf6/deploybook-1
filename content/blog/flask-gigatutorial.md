@@ -39,9 +39,12 @@ TODO: passwordless login: 4/5
 
 - [ ]
 
-TODO: server security: first steps: 0/5
+TODO: server security: first steps: 3/5
 
-TODO: HTTPS
+- try this on raspberry pi
+- clean up further reading
+
+  TODO: HTTPS
 
 ### Hello World
 
@@ -246,24 +249,28 @@ To make this change - while still in your _nano_ session inside _sshd_config_ - 
 To complete the configuration of these two values, you will restart SSH so that the change will take effect.
 
 ```
-$ sudo service ssh restart //this stops ssh and starts it again; initializing the changes.
+$ sudo service ssh restart
+# this stops ssh and starts it again; initializing the changes.
+
 ```
 
 The third change you will make is to install a firewall. The following commands install the Uncomplicated Firewall(ufw) and configure it to block access to all ports with the exception of port 22(ssh), port 80(http), and port 443(https) which we will explicitly enable.
 
 ```
-$ sudo apt-get install -y ufw //installs ufw
-$ sudo ufw allow ssh //open port 22
-$ sudo ufw allow http //open port 80
-$ sudo ufw allow 443/tcp //open port 443
-$ sudo ufw --force enable //enable command reloads ufw and enables firewall on boot, force command disables interactive script
+$ sudo apt-get install -y ufw  # installs ufw
+$ sudo ufw allow ssh  # open port 22
+$ sudo ufw allow http # open port 80
+$ sudo ufw allow 443/tcp # open port 443
+$ sudo ufw --force enable # enable command reloads ufw
+# and enables firewall on boot, force command disables interactive script
 
 ```
 
 Once you have completed these steps you can check your work with:
 
 ```
-    $ sudo ufw status //will show active if your install and configuration were successful.
+$ sudo ufw status
+# will show active if your install and configuration were successful.
 ```
 
 Further Reading:
@@ -272,8 +279,8 @@ Further Reading:
 - [how often should I rotate my ssh keys](https://tailscale.com/blog/rotate-ssh-keys/)
 - linux tutorial (need to emphasize this)
 - why is passwordless more secure?
-- what is root?
-- what is public key authentication?
+- [Who is root and why does it exist?](https://www.tecmint.com/who-is-root-why-does-root-exist-in-linux/)
+- [Diffie-Hellman for the Layman](https://borisreitman.medium.com/diffie-hellman-for-the-layman-7df6095011d9)
 - [An Introduction to Uncomplicated Firewall](https://www.linux.com/training-tutorials/introduction-uncomplicated-firewall-ufw/)
 
 ### Install Dependencies
