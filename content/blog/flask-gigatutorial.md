@@ -397,7 +397,7 @@ After you have saved this file, you will need to reload the configuration file i
 $ sudo service nginx reload
 ```
 
-Youlr application is now deployed. But it is not time for congratulations just yet. To check the deployment, you can enter the IP address of your server or, if you have configured your domain name with Namecheap and DigitalOcean, you can enter the domain name in browser address bar. Since you only have a self-signed certificate, you should expect a warning from your browswer which you will need to click through.
+Your application is now deployed. But it is not time for congratulations just yet. To check the deployment, you can enter the IP address of your server or, if you have configured your domain name with Namecheap and DigitalOcean, you can enter the domain name in browser address bar. Since you only have a self-signed certificate, you should expect a warning from your browswer which you will need to click through.
 
 In a following chapter, we will learn how to configure a proper SSL certificate for free with Let's Encrypt. However, first, I would like to cover some ways to troubleshoot your nginx configuration if you were not able to deploy and view your website.
 
