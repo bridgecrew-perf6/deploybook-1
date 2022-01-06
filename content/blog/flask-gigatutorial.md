@@ -8,6 +8,9 @@ description: in-depth deployment tutorial for Flask, Python, Postgres, Digital O
 TODO: formatting
 
 - [ ] change slash comments to #
+- [ ] if using program or package name as a command use _italics_, if using as an adjective or process use SSH in caps
+
+
       TODO
 
 - [ ] how do I want to handle initial flask steps
@@ -28,11 +31,14 @@ TODO: nginx:
 - [ ] So first we deploy with nginx with http active, then domain name, then https, then reconfigured nginx with certbot
 - configure and check logs for nginx
 
-TODO: login via SSH
+TODO: login via SSH, score: 4/5
 
 - [ ] what is ux of reader logging into DO first time? will they need a password where does it come from?
 
-TODO: HTTPS
+TODO: passwordless login:
+
+- [ ]
+  TODO: HTTPS
 
 ### Hello World
 
@@ -107,7 +113,7 @@ To verify installation of OpenSSH: ssh -V
 # you packages called "openssh-client" and "openssh-server".
 ```
 
-Using ssh with your server's IP address from the command-line, you will now be able to log into your remote server.
+Using _ssh_ with your server's IP address from the command-line, you will now be able to log into your remote server.
 
 ```
 $ ssh root@<your-server-ip-address>
@@ -115,34 +121,36 @@ $ ssh root@<your-server-ip-address>
 
 ### Passwordless Login
 
-Instead of continuting to log in as root (that is, the "root" in ssh root@your-server-ip-address), you will be configuring your server to log you in without a password. Instead of using a password, you will use public key authentication in order to verify your identity to your remote server. This method is both more convenient and more secure.
+Instead of continuting to log in as root (that is, the "root" in ssh root@your-server-ip-address), you will be configuring your server to log you in without a password. Instead of using a password, you will use public key authentication in order to verify your identity to your remote server. This method is both more convenient and more secure. (Public key authentication is one of the most important inventions of all-time and I recommend learning at least a little about it).
 
-To begin, you should come up with a new username that you would like to use as your username when logging into your server. For the purpose of the illustration in the following examples, I will be using the new user name of "gigaflask" but you are welcome to substitute your own username.
+To begin, you should come up with a new username that you would like to use as we proceed for logging into your server. For the purpose of illustration in the following examples, I will be using the new username of "gigaflask" but you are welcome to substitute your own username. Just make sure you are able to refer to it.
 
 ```
 $ adduser -gecos gigaflask
-//creates new user "gigaflask", -gecos flag disables requirement
-to provide information such as name and phone number for GECOS field in passwd file
+# creates new user "gigaflask", -gecos flag disables requirement
+# to provide information such as name and phone number
+# for GECOS field in password file
 
 $ usermod -aG sudo gigaflask
-//grants superuser privileges to user "gigaflask"
+# grants superuser privileges to user "gigaflask"
 
 $ su gigaflask
-//"su" stands for "switch user", so command tells current command-line session to switch current user from root to gigaflask.
+# "su" stands for "switch user", so command tells current command-line session to
+# switch current user from root to gigaflask.
 ```
 
 With the new user "gigaflask" created, the next step is to configure public key authentication. Once this is configured you will no longer have to type a password when logging in to your server from ssh.
 
-Configuring public key authentication is one of the most intimidating steps of configuring a deployment. The process involves manipulating weird, long numbers with terminal commands with which you may not have familiarity. Furthermore, the terms "key", "authentication", and "private" raise the anxiety level; if I do this wrong will hackers get into my server? can I fix this if I mess up? Please rest assured however that nothing you are doing in this step of the deployment is irrevocable. Stripped of the terms of art the process itself is fundamentally a simple one.
+Note: Configuring public key authentication is one of the most intimidating steps of configuring a deployment. The process involves manipulating weird, long numbers with terminal commands with which you may not have familiarity. Furthermore, the terms "key", "authentication", and "private" raise the anxiety level; if I do this wrong will hackers get into my server? can I fix this if I mess up? Please rest assured however that nothing you are doing in this step of the deployment is irrevocable. Stripped of the terms of art, the process itself is fundamentally a simple one.
 
 I will walk through the basic steps of generating a public key on your local computer and then configuring your remote server to accept this form of authentication. You may want to read through all the steps before beginning. After we have gone through the steps I will provide some ways to look into the components of public key authentication to determine whether you are configured correctly.
 
-If you have been following along with this project, you will still be logged into the remote after create the new user "gigaflask". Since the next step requires that you create a private key on your local computer, you will need to open a second terminal window (and do not log into the remote server).
+If you have been following along with this project, you will still be logged into the remote after creating the new user "gigaflask". Since the next step requires that you create a private key on your local computer, you will need to open a second terminal window (and do not log into the remote server).
 
-In the second terminal window, we will be checking the contents of the ~/.ssh directory to determine whether or not you ALREADY have a private key.
+In the second terminal window, we will be checking the contents of the _~/.ssh_ directory to determine whether or not you ALREADY have a private key.
 
 ```
-$ ls ~/.ssh  //lists contents of ~/.ssh folder
+$ ls ~/.ssh  # lists contents of ~/.ssh folder
 
 ```
 
