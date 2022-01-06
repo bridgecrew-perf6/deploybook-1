@@ -5,7 +5,10 @@ title: flask giga tutorial
 description: in-depth deployment tutorial for Flask, Python, Postgres, Digital Ocean, Nginx, Gunicorn and more!
 ---
 
-TODO
+TODO: formatting
+
+- [ ] change slash comments to #
+      TODO
 
 - [ ] how do I want to handle initial flask steps
 - [ ] how do I want to handle text editors on remote _vim_ and _nano_
@@ -24,6 +27,10 @@ TODO: nginx:
 - order of
 - [ ] So first we deploy with nginx with http active, then domain name, then https, then reconfigured nginx with certbot
 - configure and check logs for nginx
+
+TODO: login via SSH
+
+- [ ] what is ux of reader logging into DO first time? will they need a password where does it come from?
 
 TODO: HTTPS
 
@@ -92,11 +99,12 @@ Since your server is headless, you will not have a desktop interface that you ma
 
 ```
 To verify installation of OpenSSH: ssh -V
-// should return something like
-//OpenSSH_8.2p1 Ubuntu-4ubuntu0.3, OpenSSL 1.1.1f  31 Mar 2020
+# should return something like
+# "OpenSSH_8.2p1 Ubuntu-4ubuntu0.3, OpenSSL 1.1.1f  31 Mar 2020"
 
-Alternately, you can get a list of all packages installed
-by using: dpkg --list.  Scrolling down you some ways should show you packages called "openssh-client" and "openssh-server".
+# Alternately, you can get a list of all packages installed
+# by using: dpkg --list.  Scrolling down you some ways should show
+# you packages called "openssh-client" and "openssh-server".
 ```
 
 Using ssh with your server's IP address from the command-line, you will now be able to log into your remote server.
@@ -104,10 +112,6 @@ Using ssh with your server's IP address from the command-line, you will now be a
 ```
 $ ssh root@<your-server-ip-address>
 ```
-
-//You may be prompted to enter a password. What is DO behavior at this stage?
-/where are my certifications stored?
-/what is the password situation & pitfalls during initial login for DO?
 
 ### Passwordless Login
 
