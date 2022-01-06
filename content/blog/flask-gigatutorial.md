@@ -7,7 +7,6 @@ description: in-depth deployment tutorial for Flask, Python, Postgres, Digital O
 
 TODO
 
-    - [ ] get rid of other blog posts on site
     - [ ] how do I want to handle initial flask steps
     - [ ] how do I want to handle text editors on remote *vim* and *nano*
     - [ ] wrap in introspection
@@ -16,6 +15,7 @@ TODO
     [owasp top10](https://owasp.org/www-project-top-ten/)
     - [ ] does debug server matter to this type of flask deployment?
     - [ ] don't forget about having to enter the passphrase (how are you supposed to securely handle these password?)
+    - what is my package called: deploy-linux?  I am going to just be stuck with that unless I am shown that I am otherwise wrong
 
 ### Hello World
 
@@ -102,7 +102,7 @@ $ ssh root@<your-server-ip-address>
 /where are my certifications stored?
 /what is the password situation & pitfalls during initial login for DO?
 
-### PasswordLess Login
+### Passwordless Login
 
 Instead of continuting to log in as root (that is, the "root" in ssh root@your-server-ip-address), you will be configuring your server to log you in without a password. Instead of using a password, you will use public key authentication in order to verify your identity to your remote server. This method is both more convenient and more secure.
 
@@ -359,4 +359,41 @@ $ ls -a  //you should see a file called key.pem and a sub-directory called certs
 
 ### Configuring Nginx: Nginx Config File
 
-In order to serve your project with nginx, you will need to create a configuration file.
+In order to serve your project with nginx, you will need to create an nginx configuration file.
+
+The directory for the configuration for your DigitalOcean installation is _/etc/nginx/sites-enabled/_. Since nginx at installation installs a test site in this folder, the first step we are going to take is to remove this file, which we do not need. This is done with the following command:
+
+```
+$ sudo rm /etc/nginx/sites-enabled/default
+```
+
+The next step is to configure nginx. If this is your first time deploying to a remote server, this is perhaps the most difficult step. The configuration file is written in a language that is likely unfamiliar to you, there are numerous location in the config file where you must substitute your paths and package names, and - unless your website works perfectly after you save this file for the first time - it can feel difficult to get feedback from nginx about which line is causing the problem.
+
+To mitigate the pain of this circumstance, I am first going to show you the text of the configuration file that you should use together with comments about what each section of the configuration file is configuring. Later, I will give you some simple ways to introspect the nginx server's status on your remote so that if something is not working you can narrow down the causes. Finally, I will provide additional sources that I found useful during my first deploy and in my research for this book.
+
+For the first step, you are going to write the configuration in the directory referenced above _/etc/nginx/sites-enabled_ in a file called _deploy-linux_. The content of the file should be as follows:
+{your_domain}
+
+```
+server {
+        listen 80;
+        listen [::]:80;
+
+        root /var/www/{your_domain}/html;
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name {your_domain}.com www.{your_domain}.com;
+
+        location / {
+        # forward application requests to the gunicorn server/manually added by me; not certbot
+        proxy_pass http://localhost:8000;
+        proxy_redirect off;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+
+```
+
+nginx -t thing, what is that put that in
