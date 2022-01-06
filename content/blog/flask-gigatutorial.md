@@ -5,8 +5,27 @@ title: flask giga tutorial
 description: in-depth deployment tutorial for Flask, Python, Postgres, Digital Ocean, Nginx, Gunicorn and more!
 ---
 
-TODO - [ ] So first we deploy with nginx with http active, then domain name, then https, then reconfigured nginx with certbot - [ ] how do I want to handle initial flask steps - [ ] how do I want to handle text editors on remote _vim_ and _nano_ - [ ] wrap in introspection - [ ] set up linux computer and follow along with my own work making notes (I can do this with) - [ ] oswap link & discussion of security: leave it to the experts (but don't ignore)
-[owasp top10](https://owasp.org/www-project-top-ten/) - [ ] does debug server matter to this type of flask deployment? - [ ] don't forget about having to enter the passphrase (how are you supposed to securely handle these password?) - what is my package called: deploy-linux? I am going to just be stuck with that unless I am shown that I am otherwise wrong
+TODO
+
+- [ ] how do I want to handle initial flask steps
+- [ ] how do I want to handle text editors on remote _vim_ and _nano_
+- [ ] wrap in introspection
+- [ ] set up linux computer and follow along with my own work making notes (I can do this with)
+- [ ] oswap link & discussion of security: leave it to the experts (but don't ignore)
+      [owasp top10](https://owasp.org/www-project-top-ten/)
+- [ ] does debug server matter to this type of flask deployment?
+- [ ] don't forget about having to enter the passphrase (how are you supposed to securely handle these password?)
+- [ ] what is my package called: deploy-linux? I am going to just be stuck with that unless I am shown that I am otherwise wrong
+
+TODO: nginx:
+
+- go back to digitalocean docs on configuring nginx?
+- what helped me figure out the enable reload situation?
+- order of
+- [ ] So first we deploy with nginx with http active, then domain name, then https, then reconfigured nginx with certbot
+- configure and check logs for nginx
+
+TODO: HTTPS
 
 ### Hello World
 
@@ -399,9 +418,38 @@ $ sudo service nginx reload
 
 Your application is now deployed. But it is not time for congratulations just yet. To check the deployment, you can enter the IP address of your server or, if you have configured your domain name with Namecheap and DigitalOcean, you can enter the domain name in browser address bar. Since you only have a self-signed certificate, you should expect a warning from your browswer which you will need to click through.
 
-In a following chapter, we will learn how to configure a proper SSL certificate for free with Let's Encrypt. However, first, I would like to cover some ways to troubleshoot your nginx configuration if you were not able to deploy and view your website.
+In a following chapter, we will learn how to configure a proper SSL certificate for free with Let's Encrypt. However, first, I would like to cover some ways to troubleshoot your nginx configuration if you were not able to deploy and view your application.
 
 ### Troubleshooting Nginx Configuration
+
+If you find that your configuration is not serving your application properly, the following commands may be useful:
+
+```
+$ sudo apt-get install nginx //command to install nginx
+$ sudo service nginx status //check status of nginx server, will show green "active" if ok.
+$ systemctl service nginx //same as above
+$ sudo systemctl stop nginx
+$ sudo systemctl start nginx
+$ sudo systemctl restart nginx
+$ sudo systemctl reload nginx //use if you are only making configuration changes
+$ sudo systemctl disable nginx  //disable nginx from starting at boot
+$ sudo systemctl enable nginx //re-enable nginx to start at boot
+
+//have nginx check configuration file
+$ sudo nginx -t //should return "nginx: ... syntax is ok" if not
+you probably need to double check your configuration file.
+
+//firewall commands
+
+$ sudo ufw status //check status of firewall
+$ sudo ufw app list //check open ports:
+```
+
+### Nginx Further Reading
+
+-[How to Install Nginx on Ubuntu 20.04](<https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-20-04#step-5-%E2%80%93-setting-up-server-blocks-(recommended)>)
+
+-[Nginx Docs](http://nginx.org/en/docs/beginners_guide.html#:~:text=By%20default%2C%20the%20configuration%20file,%2Flocal%2Fetc%2Fnginx%20.) very useful but far from easy reading
 
 ### Pushing Updates to Your Remote Server
 
@@ -414,5 +462,5 @@ Instead, you will need to stop the current server and force the server to read t
 ```
 (venv) $ git pull  //downloads new code version
 (venv) $ sudo supervisorctl stop deploy-linux //stops the server, sub your app name as appropriate
-(venv) $ sudo supervisorctl start deploy-linux //starts new server
+(venv) \$ sudo supervisorctl start deploy-linux //starts new server
 ```
