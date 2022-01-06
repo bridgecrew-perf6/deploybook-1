@@ -5,17 +5,8 @@ title: flask giga tutorial
 description: in-depth deployment tutorial for Flask, Python, Postgres, Digital Ocean, Nginx, Gunicorn and more!
 ---
 
-TODO
-
-    - [ ] how do I want to handle initial flask steps
-    - [ ] how do I want to handle text editors on remote *vim* and *nano*
-    - [ ] wrap in introspection
-    - [ ] set up linux computer and follow along with my own work making notes (I can do this with)
-    - [ ] oswap link & discussion of security: leave it to the experts (but don't ignore)
-    [owasp top10](https://owasp.org/www-project-top-ten/)
-    - [ ] does debug server matter to this type of flask deployment?
-    - [ ] don't forget about having to enter the passphrase (how are you supposed to securely handle these password?)
-    - what is my package called: deploy-linux?  I am going to just be stuck with that unless I am shown that I am otherwise wrong
+TODO - [ ] So first we deploy with nginx with http active, then domain name, then https, then reconfigured nginx with certbot - [ ] how do I want to handle initial flask steps - [ ] how do I want to handle text editors on remote _vim_ and _nano_ - [ ] wrap in introspection - [ ] set up linux computer and follow along with my own work making notes (I can do this with) - [ ] oswap link & discussion of security: leave it to the experts (but don't ignore)
+[owasp top10](https://owasp.org/www-project-top-ten/) - [ ] does debug server matter to this type of flask deployment? - [ ] don't forget about having to enter the passphrase (how are you supposed to securely handle these password?) - what is my package called: deploy-linux? I am going to just be stuck with that unless I am shown that I am otherwise wrong
 
 ### Hello World
 
@@ -374,6 +365,8 @@ To mitigate the pain of this circumstance, I am first going to show you the text
 For the first step, you are going to write the configuration in the directory referenced above _/etc/nginx/sites-enabled_ in a file called _deploy-linux_. The content of the file should be as follows:
 {your_domain}
 
+<i>/etc/nginx/sites-enabled/deploy-linux</i>
+
 ```
 server {
         listen 80;
@@ -393,7 +386,33 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
-
 ```
 
+//fix the comments in the config
 nginx -t thing, what is that put that in
+
+After you have saved this file, you will need to reload the configuration file in order to activate it:
+
+```
+$ sudo service nginx reload
+```
+
+Youlr application is now deployed. But it is not time for congratulations just yet. To check the deployment, you can enter the IP address of your server or, if you have configured your domain name with Namecheap and DigitalOcean, you can enter the domain name in browser address bar. Since you only have a self-signed certificate, you should expect a warning from your browswer which you will need to click through.
+
+In a following chapter, we will learn how to configure a proper SSL certificate for free with Let's Encrypt. However, first, I would like to cover some ways to troubleshoot your nginx configuration if you were not able to deploy and view your website.
+
+### Troubleshooting Nginx Configuration
+
+### Pushing Updates to Your Remote Server
+
+Since our minimal Flask application is so limited in function, it is likely you will want to add features in the code. If you do make such changes, you can use _git pull_ from the remote server to download the new commits made since the prior deployment.
+
+However, simply downloading the code to the remote is not sufficient to upgrade, the server processes will continue running the old code stored in memory.
+
+Instead, you will need to stop the current server and force the server to read the new code and then restart the server. Most upgrades that you will do to a site will include action like updating the database but to push simple changes like styling or minor changes in code, you can use:
+
+```
+(venv) $ git pull  //downloads new code version
+(venv) $ sudo supervisorctl stop deploy-linux //stops the server, sub your app name as appropriate
+(venv) $ sudo supervisorctl start deploy-linux //starts new server
+```
