@@ -34,7 +34,8 @@ function Bio() {
               }}
             />
             <p>
-              by <strong>{author}</strong>.{` `}
+              by <strong>{author}</strong>
+              {` `}
             </p>
           </Container>
         );
