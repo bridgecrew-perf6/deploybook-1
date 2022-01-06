@@ -35,10 +35,13 @@ TODO: login via SSH, score: 4/5
 
 - [ ] what is ux of reader logging into DO first time? will they need a password where does it come from?
 
-TODO: passwordless login:
+TODO: passwordless login: 4/5
 
 - [ ]
-  TODO: HTTPS
+
+TODO: server security: first steps: 0/5
+
+TODO: HTTPS
 
 ### Hello World
 
@@ -135,8 +138,10 @@ $ usermod -aG sudo gigaflask
 # grants superuser privileges to user "gigaflask"
 
 $ su gigaflask
-# "su" stands for "switch user", so command tells current command-line session to
+# "su" stands for "switch user", so command tells current
+# command-line session to
 # switch current user from root to gigaflask.
+
 ```
 
 With the new user "gigaflask" created, the next step is to configure public key authentication. Once this is configured you will no longer have to type a password when logging in to your server from ssh.
@@ -156,14 +161,13 @@ $ ls ~/.ssh  # lists contents of ~/.ssh folder
 
 If the result of the above command returns <i>id_rsa</i> and <i>id_rsa.pub</i> then you already have a key and can use this key to configure the remote server.
 
-However, if the above command does not return the two files OR if you do not have an ~/.ssh directory at all, you will need to create an SSH keypair by using a utility called <i>ssh-keygen</i>.
+However, if the above command does not return the two files OR if you do not have an _~/.ssh_ directory at all, you will need to create an SSH keypair by using a utility called <i>ssh-keygen</i>.
 
 ```
 $ ssh-keygen
-//command to start the procedure for creating a keygen
-```
+# command to start the procedure for creating a keygen
 
-//what are the questions?
+```
 
 After you have finished the ssh-keygen steps, you should check that you have an <i>~/.ssh</i> directory, an <i>id_rsa</i> file, and an <i>id_rsa.pub</i>file.
 
@@ -174,33 +178,44 @@ In the next step, we will use the <i>cat</i> command to view the contents of you
 ```
 $ cat ~/.ssh/id_rsa.pub
 
-//if you were successful generating a
-private key in the prior step you will
-see a very long series of letters and
-numbers that is the content of your
-public rsa key followed by your laptop name.
+# if you were successful generating a
+# private key in the prior step you will
+# see a very long series of letters and
+# numbers that is the content of your
+# public rsa key followed by your laptop name.
 
-//Example public key output:
+# example public key output, actual output many lines long:
 ssh-rsa AAAAB3NzaD1fc2EAAABAQCjw....F9lXv5f/9+8YD joe@joelaptop
 
 ```
 
 In the next step we will be copying this key to a location in the directory structure of your remote server.
 
-Thus, first copy the public key you just generated to the clipboaord. Then, return to the original terminal window (the one logged into the remote server). Finally, issues the following command.
+Thus, first copy to the clipboard the public key you just generated. Then, return to the original terminal window (the one logged into the remote server). Finally, issue the following command:
 
 ```
-$ echo <paste-YOUR-public-key> >> ~/.ssh/authorized_keys  //the echo command displays a line of text and combined with ">>"; it "displays" the line of text into the authorized_keys file
+$ echo <paste-YOUR-public-key> >> ~/.ssh/authorized_keys
+# the echo command displays a line of text and combined with ">>";
+# it "displays" the line of text into the authorized_keys file
 
-$ chmod 600 ~/.ssh/authorized_keys //chmod stands for "change mode of access" and allows a Ubuntu/Linux user to change who and how much access a user has.  600 is an argument passed to chmod command.  It gives the owner full read and write access to the target file, here authorized_keys, while preventing any other user from accessing the file.
+$ chmod 600 ~/.ssh/authorized_keys
+# chmod stands for "change mode of access"
+# chmod allows a Ubuntu/Linux user to change who
+# and how much access a user has.
+# 600 is an argument passed to chmod command.
+# It gives the owner full read and write access to the target file,
+# here authorized_keys, while preventing any other user
+# from accessing the file.
+
 ```
 
-Once you have entered these commands, you will be able to log into your remote server without a password. From now on, when you log into the remote server <i>ssh</i> will identify itself to the remote server and trigger a cryptographic procedure that requires a public key. The remote server then checks that the procedure is correct and that you are verified by referrencing the public key which you have just provided.
+Once you have entered these commands, you will be able to log into your remote server without a password. From now on, when you log into the remote server <i>ssh</i> will identify itself to the remote server and trigger a cryptographic procedure that requires a public key. The remote server then checks that the procedure is correct and that you are verified by referencing the public key which you have just provided.
 
-To check work, you should first log out of both your <i>ssh</i> session and your remote session. Then you will attempt to login directly to your "gigaflask" account by entering
+To check work, you should first log out of both your <i>ssh</i> session and your remote session. Then you will attempt to login directly to your "gigaflask" account by entering, as you have done before:
 
 ```
 $ ssh gigaflask@<your-server-ip-address>
+
 ```
 
 If your work has been successful you should not have to enter a password and (depending on your bash configuration) you will see <i>gigaflask@your-server-ip-address</i> at the prompt in your terminal.
@@ -217,14 +232,16 @@ To disable root logins via _ssh_, first you will log back into your remote serve
 
 ```
 $ ssh gigaflask@your-server-ip-address
-$ sudo nano /etc/ssh/sshd_config  //this will open the SSH configuration file
+$ sudo nano /etc/ssh/sshd_config
+# this will open the SSH configuration file
+
 ```
 
-Once open you should scroll down inside the terminal-based _nano_ editor window to the line that starts with ==PermitRootLogin==. There you will change the value to ==no==.
+Once open you should scroll down inside the terminal-based _nano_ editor window to the line that starts with "PermitRootLogin". There you will change the value to "no".
 
 The second change you will make is located in the same file. Once you have made this change you will have disabled all password logins for all accounts. Since you have already enabled password-less logins via public key authentication there is no need to permit password authentication on your remote server at all.
 
-To make this change - while still in your _nano_ session inside _sshd_config_ - scroll to the line ==PasswordAuthentication==. There you will change the value to ==no==.
+To make this change - while still in your _nano_ session inside _sshd_config_ - scroll to the line "PasswordAuthentication". There you will change the value to "no".
 
 To complete the configuration of these two values, you will restart SSH so that the change will take effect.
 
