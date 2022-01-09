@@ -21,7 +21,7 @@ TODO: formatting
       [owasp top10](https://owasp.org/www-project-top-ten/)
 - [ ] does debug server matter to this type of flask deployment?
 - [ ] don't forget about having to enter the passphrase (how are you supposed to securely handle these password?)
-- [ ] what is my package called: deploy-linux? I am going to just be stuck with that unless I am shown that I am otherwise wrong
+- [ ] what is my package called: deploy-linux? I am going to just be stuck with that unless I am shown that I am otherwise wrong -[git for beginners](http://ryanflorence.com/git-for-beginners/)
 
 TODO: nginx:
 
@@ -45,11 +45,15 @@ TODO: server security: first steps: 3/5
 - clean up further reading
 
 Todo: installing the application on the remote server: 4/5
-Todo: installing gunicorn and supervisor
+Todo: installing gunicorn and supervisor: 4/5
 
 - test it on raspberry pi
+- netstat -tulpn | grep 8000
 
-TODO: HTTPS
+Todo: Domain Name and DNS: 2/5
+
+- hmmm?
+  TODO: HTTPS
 
 ### Hello World
 
@@ -362,23 +366,21 @@ If all is working as it should, you will see the Flask return a little message t
 
 ### Setting up Gunicorn and Supervisor
 
-When you start your Flask server with _flask run_, you are using the simple development server that comes with Flask. While useful in development, this server is not designed with the functionality and performance needed for a production server. Instead we will ust _gunicorn_, a Python webserver, widely used for serving in production.
+When you started your Flask server with _flask run_, you are using the simple development server that comes with Flask. While useful in development, this server is not designed with the functionality and performance needed for a production server. Instead we will ust _gunicorn_, a Python webserver, widely used for serving in production.
 
 If you want to simply start _gunicorn_, you can use the following command.
 
 ```
 (venv) $ gunicorn -b localhost:8000 -w 4 [WHICH ONE IS THIS: WHICH ONE IS THIS]
-
 ```
 
-//-b tells gunicorn on which port to listen for requests, here port 8000.
-//-w configures how many workers gunicorn will run, here we have configured 4. While having more workers will increase the number of clients your application can handle, if you have more workers than can be handled by the amount of RAM on your remote server you will experience performance issues and you will then need to adjust down the number of workers you provide.
+In the above command, _-b_ tells _gunicorn_ on which port to listen for requests, here port 8000. The flag _-w_ configures how many workers _gunicorn_ will run, here we have configured 4. While having more workers will increase the number of clients your application can handle, if you have more workers than can be handled by the amount of RAM on your remote server you will experience performance issues and you will then need to adjust down the number of workers you provide.
 
 The _app:app_ argument tells _gunicorn_ how to load the application instance. \*\*\* WHY CAN'T I GET THIS TO MAP TO GRINBERG'S CODE V. MY DEPLOY-LINUX CODE?
 
 The main drawback against running _gunicorn_ from the command-line is that if your remote server crashes, you will need to manually restart your application. Instead, we are going to use the _supervisor_ package, which we have already installed to ensure that our Flask application starts when the remote server is rebooted.
 
-_supervisor_ uses a configuration file that configures what programs to wathc and how to restart them when it is necessary. _supervisor_ stores its configuration file in _/etc/supervisor/conf.d/_. We are going to make a configuration file called _deploy.conf_ and store the following code.
+_supervisor_ uses a configuration file that configures what programs to watch and how to restart them when it is necessary. _supervisor_ stores its configuration file in _/etc/supervisor/conf.d/_. We are going to make a configuration file called _deploy.conf_ and store the following code.
 
 ```
 [program:deploy]
@@ -404,11 +406,11 @@ $ sudo supervisorctl reload
 
 Now your application should be running under the watchful eye of the _supervisor_ package.
 
-///how to introspect whether any of this is working? I think I have good notes and practices on this
+If you would like to check the status of supervisor, open another terminal and use _ssh_ to log into your remote, then enter:
 
-Further Reading:
-
--[git for beginners](http://ryanflorence.com/git-for-beginners/)
+```
+$ sudo service supervisor status
+```
 
 ### Domain Name and DNS
 
@@ -420,20 +422,23 @@ You will be required to pay Namecheap for a domain name. The costs for this doma
 
 Your Flask application is now served by _gunicorn_ on its own private 8000 port according to the configuration code you wrote into the _supervisor_ configuration file in the prior passage. To continue your deployment, you will next need to expose your application to the wider world by enabling another web server, called _nginx_, to allow access via ports 80 and 443. If you remember these are the same ports that you configured your firewall to open.
 
-We are going to configure port 80 to forward all traffic to port 443; port 443 being the channel for encrypted traffic under HTTPS. In order to use HTTPS, you will need an SSL certificate. Later, we will walk through the process of obtaining a REAL SSL certificate from the certificated authority Let's Encrypt but for now we will use a _self-signed SSL certificate_. This is sufficient for our purposes of practicing the steps of deployment. However, please be aware that with a self-signed certificate that your browser will warn you and any users of the site that the certificate is not trusted.
+We are going to configure port 80 to forward all traffic to port 443; port 443 being the channel for encrypted traffic under HTTPS. In order to use HTTPS, you will need an SSL certificate. Later, we will walk through the process of obtaining a REAL SSL certificate from the certification authority _Let's Encrypt_ but for now we will use a _self-signed SSL certificate_. This is sufficient for our purposes of practicing the steps of deployment. However, please be aware that with a self-signed certificate your browser will warn you and any users of the site that the certificate is not trusted.
 
-In any case, the following command will create an SSL certificate for your project. You should execute this function from the root directory of your Flask project on your remote server. Be aware: the following command is going to ask you for information about your idenity and application that will be included in the SSL certificate. Web browsers will show this information to users if they request to see it (by, for example, clicking on the little lock icon in the far left of the Chrome Omnibar).
+In any case, the following command will create an SSL certificate for your project. You should execute these commands from the toplevel directory of your Flask project on your remote server. Be aware: the following command is going to ask you for information about your application and your identity that will be included in the SSL certificate. Web browsers will show this information to users if they request to see it (by, for example, clicking on the little lock icon in the far left of the Chrome Omnibar).
+
+From the toplevel directory of your Flask app:
 
 ```
-$ mkdir certs //make a new directory called "certs"
-$ openssl req -new -newkey rsa:4096 -day 365 \
-- nodes -x509 -keyout certs/key.pem -out certs/cert.pem
+$ mkdir certs # make a new directory called "certs"
+$ openssl req -new -newkey rsa:4096 -days 365 -nodes -x509 -keyout certs/key.pem -out certs/cert.pem
 ```
+
+This command will start an little animation in your terminal while it is generating a new RSA key, which it will write to _certs/key.pem_ in the toplevel directory of your app. The command will then ... ASK YOU QUESTIONS {START HERE}
 
 This command results in to files being created in your project's root directory called _key.pem_ and another in the folder just created called _certs_ called _cert.pem_. To verify the existence of these files, you can check with:
 
 ```
-$ ls -a  //you should see a file called key.pem and a sub-directory called certs.
+$ ls -a  # you should see a file called key.pem and a sub-directory called certs.
 ```
 
 ### Configuring Nginx: Nginx Config File
