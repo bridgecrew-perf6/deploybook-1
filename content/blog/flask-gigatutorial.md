@@ -44,7 +44,11 @@ TODO: server security: first steps: 3/5
 - try this on raspberry pi
 - clean up further reading
 
-  TODO: HTTPS
+Todo: installing the application on the remote server: 3/5
+
+- how do I want to handle setting up sample.config.py and .env?
+
+TODO: HTTPS
 
 ### Hello World
 
@@ -299,29 +303,52 @@ why are some from apt-get and some from pip?
 
 ### Installing the Application on the Remote Server
 
-In this step we will deplou our application source code to the remote server. To download (or "clone") the application source code to your remote server, make sure that you are logged via _ssh_ to the "gigaflask" account on the remote server.
+In this step we will deplou our application source code to the remote server. To download (or "clone") the application source code to your remote server, make sure that you are logged in via _ssh_ to the "gigaflask" account on the remote server. Then:
 
 ```
-$ git clone MAKE SURE TO GET V0.1 IN THERE
+$ git clone -b v0.1 https://www.github.com/redmonroe/deploy-linux
 $ cd deploy-linux
-$ git checkout MAKE SURE i HAVE THE RIGHT VERSION
 ```
 
-These commands download the code and installs it on the remote server. Since we using a minimal Flask application to demonstrate deployments rather than the functionality of Flask, we are using only a tiny packet of Flask code to run our application. Thus you should make sure to checkout the version named INSERT HERE //ALSO TALK ABOUT MY VERSION V YOUR VERSION OF CODE ON GIT IF YOU DID SOMETHING DIFFERENT IN THE FAMILIARIZING YOURSELF WITH FLASK CHAPTER ABOVE.
+These commands download the code and will install it on the remote server. Since we using a minimal Flask application to demonstrate deployments rather than the functionality of Flask, we are using only a tiny packet of Flask code to run our application.
 
 In the next set of commands, we will be activating a virtual environment and installing the dependencies list in the _requirements.txt_ file you have just cloned from the Github repository.
 
 ```
-$ python3 -m venv venv //activate the virtual environment
-$ source venv/bin/activate
-$ (venv) $ pip install -r requirements.txt  //installed contents of requirements.txt into the virtual environment
+$ python3 -m venv venv # create the virtual environment
+$ source venv/bin/activate # activate the virtual environment
+$ (venv) $ pip install -r requirements.txt  # install contents of requirements.txt into the virtual environment
 ```
 
 Additionally, we are going to install a further package from pip for our production deployment. The _gunicorn_ package (short for, green unicorn, I am told) is a production web server for Python applications.
 
 ```
 (venv) $ pip install gunicorn
+```
 
+Finally, we will need to update the _.env_ and _config.py_ files. In the repository you clone you should see a _sample-config.py_ file. We may make modifications to this file in future chapters but for now it is enough to simple change the name of the file with:
+
+```
+$ mv sample-config.py config.py  # renames file
+```
+
+Since it is generally not a good practice to include _.env_ files in public repositories, you will need to create it on your remote.
+
+```
+$ touch .env
+```
+
+Now you can use _nano_ to edit with:
+
+```
+$ sudo nano .env
+```
+
+And add the following two lines:
+
+```
+FLASK_APP='deploy.py'  # or the name of your Flask file in your top-level directory
+FLASK_ENV='development'
 ```
 
 ### Setting up Gunicorn and Supervisor
