@@ -44,9 +44,10 @@ TODO: server security: first steps: 3/5
 - try this on raspberry pi
 - clean up further reading
 
-Todo: installing the application on the remote server: 3/5
+Todo: installing the application on the remote server: 4/5
+Todo: installing gunicorn and supervisor
 
-- how do I want to handle setting up sample.config.py and .env?
+- test it on raspberry pi
 
 TODO: HTTPS
 
@@ -335,13 +336,13 @@ $ mv sample-config.py config.py  # renames file
 Since it is generally not a good practice to include _.env_ files in public repositories, you will need to create it on your remote.
 
 ```
-$ touch .env
+(venv) $ touch .env
 ```
 
 Now you can use _nano_ to edit with:
 
 ```
-$ sudo nano .env
+(venv) $ sudo nano .env
 ```
 
 And add the following two lines:
@@ -350,6 +351,14 @@ And add the following two lines:
 FLASK_APP='deploy.py'  # or the name of your Flask file in your top-level directory
 FLASK_ENV='development'
 ```
+
+If you completed these steps, you will have a Flask app on your remote server and your venv environment will be activated. At this point, you should be able to run the development server that comes with Flask on your remote by typing:
+
+```
+(venv) $ flask run
+```
+
+If all is working as it should, you will see the Flask return a little message telling you that it is "Serving Flask app at 'deploy.py'" and that "Environment: development".
 
 ### Setting up Gunicorn and Supervisor
 
