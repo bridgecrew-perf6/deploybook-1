@@ -23,7 +23,7 @@ TODO: formatting
 - [ ] don't forget about having to enter the passphrase (how are you supposed to securely handle these password?)
 - [ ] what is my package called: deploy-linux? I am going to just be stuck with that unless I am shown that I am otherwise wrong -[git for beginners](http://ryanflorence.com/git-for-beginners/)
 
-Todo: hello world: 1/5
+Todo: hello world: 3/5: what else do I want to do here?
 Todo: minimal flask: 1/5
 TODO: nginx:
 
@@ -69,23 +69,29 @@ More specifically, we will be deploying a minimal Flask application onto a Digit
 
 In the interest of keeping the writing focused, the guide will be provided with the assumption that you have access to a Bash or other Linux-based terminal. I personally use a Windows PC with the Windows Subsystem for Linux 2 (WSL2) enabled. If you are using a Windows PC I strongly suggest that you setup a Linux environment. Recent versions of Windows can enable the environment with one line of code: see [Install WSL2](https://docs.microsoft.com/en-us/windows/wsl/install). While deployment using Powershell or the Windows commandline is certainly possible, modern web deployment proceeds on Linux and you will find that most of the documentation, tutorials, and tools have been created with Linux and Bash users in mind.
 
-However, there are two requirements: first, the following you will have to pay digital ocean, you may have to pay for dns,
+Another point to mention at the outset: unfortunately, DigitalOcean and most DNS providers do charge and will require a credit or debit card to setup an active account. However, costs will be minimized: you can expect to pay around $5 per month for a DigitalOcean VPS and you can register your domain name for less than $10 (there are also free options but I will not be recommending them). If this is a limitation for you, there are plenty of ways to deploy from computers that you already own. However, this process is not the focus of this guide.
 
-Term of art slurry:
-postgres
-https
-let's encrypt
-git & github
+Another assumption I am making is that you have an existing installation of Python 3 on the computer you are using for this guide. To check your installation and version, you can use:
+
+```
+$ python3 --version
+```
+
+If you have a Windows computer and have enabled WSL2, the Ubuntu distribution that WSL2 uses comes with a version of Python 3 (as of the date of this writing).
+
+### Install Flask on your Local Computer
+
+In the next step, we are going to install Flask on your computer. This step has not practical effect on your eventual deployment but it will give us a chance to practice locally what we will soon be doing on a remote server.
 
 familiarize with flask/git/venv locally, configuring nginx; (note on introspecting remote processs), https, autorenew with cron, set up dns,
 
 first order security concerns: firewall, secret key,
 
-### Minimal Flask Application
-
 A minimal Flask application, in this context, means a small amount of code that will allow us to demonstrate and test our configuration on the remote server.
 
 [link to github v1 #todo](https://github.com/redmonroe/deploy-linux/tree/v0.1)
+
+### Minimal Flask Application
 
 ### Trying Flask Application Locally
 
