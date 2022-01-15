@@ -23,6 +23,8 @@ TODO: formatting
 - [ ] don't forget about having to enter the passphrase (how are you supposed to securely handle these password?)
 - [ ] what is my package called: deploy-linux? I am going to just be stuck with that unless I am shown that I am otherwise wrong -[git for beginners](http://ryanflorence.com/git-for-beginners/)
 
+Todo: hello world: 1/5
+Todo: minimal flask: 1/5
 TODO: nginx:
 
 - go back to digitalocean docs on configuring nginx?
@@ -61,9 +63,11 @@ Welcome! You are about to start on a journey toward deploying a working web appl
 
 Both the structure and content of this book are shamelessly based on Miguel Grinberg's [Flask Mega-Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world). While the focus of this book is on exploring and explaining the surplus of non-obvious tasks required to get a Flask application onto the internet, it should be treated as something of an extended application of the lesson in Chapter 17 of the Mega-Tutorial that provides much more context for the many, many steps of deploying.
 
-NEEDS LOVE: In the first part of this book, XXXXXXXXXXXXXXXXXXXXXxxxxx to, at the end, having a website, with a domain name, served over https on nginx and gunicorn, on a cheap remote linux server provided by Digital Ocean. We will be saving discussion of in-depth security, docker, nftables.
+The goal of the first part of this book is to deploy a web application to a remote server and then configure that server so you can view your application from any web browser anywhere in the world. The focus of our work is on serving the simplest possible secure deployment so that you can demonstrate to yourself that it is possible.
 
-assumptions: I am writing this with as few assumptions as possible about your experience with programming or deploying code to websites.
+More specifically, we will be deploying a minimal Flask application onto a Digital Ocean server and then serving it, over HTTPS on Nginx and Gunicorn. We will not be deploying a database as part of these first steps.
+
+In the interest of keeping the writing focused, the guide will be provided with the assumption that you have access to a Bash or other Linux-based terminal. I personally use a Windows PC with the Windows Subsystem for Linux 2 (WSL2) enabled. If you are using a Windows PC I strongly suggest that you setup a Linux environment. See this link for instructions: [link to wsl2 go here](). While deployment using Powershell or the Windows commandline is certainly possible, modern web deployment proceeds on Linux computers and you will find that most of the documentation, tutorials, and tools have been created with Linux and Bash users in mind.
 
 However, there are two requirements: first, the following you will have to pay digital ocean, you may have to pay for dns,
 
@@ -72,8 +76,6 @@ postgres
 https
 let's encrypt
 git & github
-
-### Roadmap
 
 familiarize with flask/git/venv locally, configuring nginx; (note on introspecting remote processs), https, autorenew with cron, set up dns,
 
