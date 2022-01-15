@@ -24,7 +24,7 @@ TODO: formatting
 - [ ] what is my package called: deploy-linux? I am going to just be stuck with that unless I am shown that I am otherwise wrong -[git for beginners](http://ryanflorence.com/git-for-beginners/)
 
 Todo: hello world: 3/5: what else do I want to do here?
-Todo: minimal flask: 1/5
+Todo: flask/venv on local: 3/5 - what about git?
 TODO: nginx:
 
 - go back to digitalocean docs on configuring nginx?
@@ -81,19 +81,58 @@ If you have a Windows computer and have enabled WSL2, the Ubuntu distribution th
 
 ### Install Flask on your Local Computer
 
-In the next step, we are going to install Flask on your computer. This step has not practical effect on your eventual deployment but it will give us a chance to practice locally what we will soon be doing on a remote server.
+In the next step, we are going to install Flask on your computer. This step has no practical effect on your eventual deployment but it will give us a chance to practice locally what we will soon be doing on a remote server.
 
-familiarize with flask/git/venv locally, configuring nginx; (note on introspecting remote processs), https, autorenew with cron, set up dns,
+In this step, we will be creating a directory for our Flask app, activating a virtual environment, and writing a couple of very short Python files that will allow us to test a local Flask deployment. Finally, we will be working briefly with _git_.
 
-first order security concerns: firewall, secret key,
+We will begin by creating a directory for our Flask app.
+
+```
+$ mkdir testdeploy
+$ cd testdeploy
+```
+
+Then we will create a virtual environment which we will call _venv_.
+
+```
+$ python3 -m venv venv
+```
+
+A virtual environment allows us to download packages for use with this, or any, specific project without impacting our work in other Python projects on our computer or our remote server. If you are programming a lot in Python you will need to get into the habit of entering the following command any time you start working on a particular project.
+
+```
+$ source venv/bin/activate
+```
+
+If this command worked, your command line will now look like this:
+
+```
+(venv) $ ___
+```
+
+Now that your virtual environment is created and activated, you can install Flask with:
+
+```
+(venv) $ pip install flask
+```
+
+Pip defaults to installing the latest version of Flask (which as of the date of writing is Flask 2.0.2).
+
+Congratulations, you have now installed Flask in a virtual environment on your local machine.
+
+### Minimal Flask Application
+
+In the next step, we will be making a Flask application. The structure of a Flask application, that is, the names and relative locations of files and directories inside the project folder is as important to Flask function as the code itself: so you will need to pay careful attention to the directory structure you've created as we go. If you named your toplevel directory structure "testdeploy" as above you're prompt should look like this (if not go there now):
+
+```
+$ testdeploy ///what does it look like in bash?
+```
+
+## show directory structure as we go and refer to v0.1
 
 A minimal Flask application, in this context, means a small amount of code that will allow us to demonstrate and test our configuration on the remote server.
 
 [link to github v1 #todo](https://github.com/redmonroe/deploy-linux/tree/v0.1)
-
-### Minimal Flask Application
-
-### Trying Flask Application Locally
 
 Soon enough we will be sending the code to your remote. However, if this is your first experience with Flask, you may want to clone a copy of the minimal Flask app and experiment with it on your computer at home.
 
