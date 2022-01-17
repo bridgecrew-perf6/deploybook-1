@@ -103,6 +103,33 @@ app = Flask(__name__)
 from app import routes
 ```
 
+Confusingly, we have just now introduced two very different things both called app. The _/app_ directory includes the files directly related to a package that we have called here _app_ and thus this directory defines the _app_ pacakge. In the code you have written thus far, you have referred to this package in the _/app_ directory name and in the last line of the snippet of code you just wrote: "from app import routes". This line refers to the package _app_ and a file in it called _routes.py_ which we have not yet created but soon will.
+
+The other _app_ is the one referenced in the second line of code just written. THIS _app_ creates the Flask application object as an instance of class _Flask_ that we imported from the _flask_ package in the first line of the above code. By "instance of class _Flask_" and "application object", it is meant that we have packed all the functionality provided by Flask into a object that we have made immanent in our code and that we can now reference, control, make changes to, etc. The _app_ variable that is defined as an instance of the class _Flask_ in the _**init**.py_ script above is a member of the _app_ package from the paragraph above.
+
+We will draw your attention to the peculiar import statment for the _routes_ module at the bottom of the script instead of at the top as it the common practice. We will very soon be writing the _routes.py_ file and when we do it will need access to the _app_, the Flask object kind. Since _routes.py_ need access to _app_ and _app_ needs access to _routes.py_ at almost the same instance, we have a case of circular imports. And the way we are chosing to deal with the problem of circular imports here is to wait to import _routes_ until after we have create the _app_ (ie in "app = Flask(**name**)).
+
+The _routes_ module will contain the different URLs that the application implements and that provide the basic structure to the application (think: a website's pages) that you and your site's visitors will experience. Thus:
+
+```
+(venv) $ ~/testdeploy/app touch routes.py
+```
+
+Then we will write the following code into _routes.py_.
+
+#/app/routes.py
+
+```
+from app import app
+
+@app.routes('/')
+@app.routes('/index')
+def index():
+      return 'Hello World'
+```
+
+What you have just written is called a "view function" as in a function that allows you or a user to view a webpage with that webpage defined by the URL given in the lines _@app.routes('/')_ and _@app.routes('/index')_.
+
 ## show directory structure as we go and refer to v0.1
 
 A minimal Flask application, in this context, means a small amount of code that will allow us to demonstrate and test our configuration on the remote server.
