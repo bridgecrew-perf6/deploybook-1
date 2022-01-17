@@ -27,9 +27,11 @@ $ python3 --version
 
 If you have a Windows computer and have enabled WSL2, the Ubuntu distribution that WSL2 uses comes with a version of Python 3 (as of the date of this writing).
 
+There are numerous resources available that will show you the steps of installing Python so that will not be covered here.
+
 ### Install Flask on your Local Computer
 
-In the next step, we are going to install Flask on your computer. This step has no practical effect on your eventual deployment but it will give us a chance to practice locally what we will soon be doing on a remote server.
+In the next step, we are going to install Flask on your computer. This step has no practical effect on your eventual deployment but it will give us a chance to practice locally some of what we will soon be doing on a remote server.
 
 In this step, we will be creating a directory for our Flask app, activating a virtual environment, and writing a couple of very short Python files that will allow us to test a local Flask deployment. Finally, we will be working briefly with _git_.
 
@@ -40,13 +42,13 @@ $ mkdir testdeploy
 $ cd testdeploy
 ```
 
-Then we will create a virtual environment which we will call _venv_.
+Next we will create a virtual environment which we will call _venv_.
 
 ```
 $ python3 -m venv venv
 ```
 
-A virtual environment allows us to download packages for use with this, or any, specific project without impacting our work in other Python projects on our computer or our remote server. If you are programming a lot in Python you will need to get into the habit of entering the following command any time you start working on a particular project.
+A virtual environment allows us to download packages for use with this, or any, single project without impacting our work in other Python projects on our computer or our remote server. If you are programming a lot in Python you will need to get into the habit of entering the following command any time you start working on a particular project.
 
 ```
 $ source venv/bin/activate
@@ -70,10 +72,35 @@ Congratulations, you have now installed Flask in a virtual environment on your l
 
 ### Minimal Flask Application
 
-In the next step, we will be making a Flask application. The structure of a Flask application, that is, the names and relative locations of files and directories inside the project folder is as important to Flask function as the code itself: so you will need to pay careful attention to the directory structure you've created as we go. If you named your toplevel directory structure "testdeploy" as above you're prompt should look like this (if not go there now):
+In the next step, we will be making a Flask application. The structure of a Flask application, that is, the names and relative locations of files and directories inside the project folder is almost as important to Flask function as the code itself: so you will need to pay careful attention to the directory structure you've created as we go. If you named your toplevel directory structure "testdeploy" as above you're prompt should look like this (if not go there now):
 
 ```
-$ testdeploy ///what does it look like in bash?
+(venv) $ username@yourpc: ~/testdeploy
+```
+
+From this starting point, we are going to create a subdirectory called _app_ that will be the home of our application and for the bulk of our application files.
+
+```
+(venv) $ mkdir app
+```
+
+Next create a file called _**init**.py_ inside the _app_ directory with:
+
+```
+(venv) $ cd app
+(venv) $ touch __init__.py  #creates __init__.py file
+```
+
+Now with your text editor open up the _**init**.py_ file and put in the following test:
+
+#app/**init**.py
+
+```
+from flask import Flask
+
+app = Flask(__name__)
+
+from app import routes
 ```
 
 ## show directory structure as we go and refer to v0.1
