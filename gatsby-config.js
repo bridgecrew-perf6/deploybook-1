@@ -91,9 +91,9 @@ module.exports = {
               wrapperStyle: `margin-bottom: 1.0725rem`,
             },
           },
-          {
-            resolve: `gatsby-remark-vscode`,
-          },
+          // {
+          //   resolve: `gatsby-remark-vscode`,
+          // },
           {
             resolve: `gatsby-remark-copy-linked-files`,
           },
