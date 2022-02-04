@@ -120,7 +120,7 @@ def index():
       return 'Hello World'
 ```
 
-What you have just written is called a "view function" as in a function that allows you or a user to view a webpage with that webpage defined by the URL given in the lines _@app.routes('/')_ and _@app.routes('/index')_.
+What you have just written is called a "view function", that is, a function that allows you or a user to view a webpage with that webpage defined by the URL given in the lines _@app.routes('/')_ and _@app.routes('/index')_.
 
 ## show directory structure as we go and refer to v0.1
 
@@ -150,8 +150,11 @@ Further Reading:
 
 Since your server is headless, you will not have a desktop interface that you may be used to on your own computer. Instead you will connect to your remote server from your terminal through an SSH client and send instructions to your server via the commandline. WSL2 provides SSH (OpenSSH) by default.
 
+To verify installation of OpenSSH, from your local computer commandline:
+
 ```
-To verify installation of OpenSSH: ssh -V
+ $ ssh -V
+
 # should return something like
 # "OpenSSH_8.2p1 Ubuntu-4ubuntu0.3, OpenSSL 1.1.1f  31 Mar 2020"
 
@@ -160,41 +163,48 @@ To verify installation of OpenSSH: ssh -V
 # you packages called "openssh-client" and "openssh-server".
 ```
 
-Using _ssh_ with your server's IP address from the command-line, you will now be able to log into your remote server.
+Using _ssh_ with your server's IP address from the command-line, you will now be able to log into your remote server using the DO IP address that you obtained above.
 
 ```
 $ ssh root@<your-server-ip-address>
 ```
 
+Congratulations you are now logged into your remote server.
+
 ### Passwordless Login
 
-Instead of continuting to log in as root (that is, the "root" in ssh root@your-server-ip-address), you will be configuring your server to log you in without a password. Instead of using a password, you will use public key authentication in order to verify your identity to your remote server. This method is both more convenient and more secure. (Public key authentication is one of the most important inventions of all-time and I recommend learning at least a little about it).
+Instead of continuing to log in as root (that is, the "root" in ssh root@your-server-ip-address), you will be configuring your server to allow log in without a password. Instead of using a password, you will use public key authentication in order to verify your identity to your remote server. This method is both more convenient and more secure. (Public key authentication is one of the most important inventions of all-time and I recommend learning at least a little about it).
 
-To begin, you should come up with a new username that you would like to use as we proceed for logging into your server. For the purpose of illustration in the following examples, I will be using the new username of "gigaflask" but you are welcome to substitute your own username. Just make sure you are able to refer to it.
+To begin, you should come up with a new username that you would like to use as we proceed for logging into your server. For the purpose of illustration, I will be using the new username of "gigaflask" but you are welcome to substitute your own username. Just make sure you are able to refer to it.
+
+To create a new user and assign necessary privileges:
 
 ```
 $ adduser -gecos gigaflask
+
 # creates new user "gigaflask", -gecos flag disables requirement
 # to provide information such as name and phone number
 # for GECOS field in password file
 
 $ usermod -aG sudo gigaflask
+
 # grants superuser privileges to user "gigaflask"
 
 $ su gigaflask
+
 # "su" stands for "switch user", so command tells current
 # command-line session to
 # switch current user from root to gigaflask.
 
 ```
 
-With the new user "gigaflask" created, the next step is to configure public key authentication. Once this is configured you will no longer have to type a password when logging in to your server from ssh.
+With the new user "gigaflask" created, the next step is to configure public key authentication. Once this is configured you will no longer have to type a password when logging in to your server from _ssh_.
 
-Note: Configuring public key authentication is one of the most intimidating steps of configuring a deployment. The process involves manipulating weird, long numbers with terminal commands with which you may not have familiarity. Furthermore, the terms "key", "authentication", and "private" raise the anxiety level; if I do this wrong will hackers get into my server? can I fix this if I mess up? Please rest assured however that nothing you are doing in this step of the deployment is irrevocable. Stripped of the terms of art, the process itself is fundamentally a simple one.
+Note: Configuring public key authentication is one of the most intimidating steps of configuring a deployment. The process involves manipulating weird, long numbers with terminal commands with which you may not have familiarity. Furthermore, the terms "key", "authentication", and "private" raise the anxiety level; if I do this wrong will hackers get into my server? can I fix this if I mess up? Please rest assured however that nothing you are doing in this step of the deployment is irrevocable. Stripped of the terms of art, the process itself is a simple one.
 
-I will walk through the basic steps of generating a public key on your local computer and then configuring your remote server to accept this form of authentication. You may want to read through all the steps before beginning. After we have gone through the steps I will provide some ways to look into the components of public key authentication to determine whether you are configured correctly.
+In the next section, I will walk through the basic steps of generating a public key on your local computer and then configuring your remote server to accept this form of authentication. You may want to read through all the steps before beginning. After we have gone through the steps I will provide some ways to look into the components of public key authentication to determine whether you are configured correctly.
 
-If you have been following along with this project, you will still be logged into the remote after creating the new user "gigaflask". Since the next step requires that you create a private key on your local computer, you will need to open a second terminal window (and do not log into the remote server).
+If you have been following along with this project, you will still be logged into the remote after creating the new user "gigaflask". Since the next step requires that you create a private key on your local computer, you will need to open a **second terminal window** (and do not log into the remote server).
 
 In the second terminal window, we will be checking the contents of the _~/.ssh_ directory to determine whether or not you ALREADY have a private key.
 
@@ -213,7 +223,7 @@ $ ssh-keygen
 
 ```
 
-After you have finished the ssh-keygen steps, you should check that you have an <i>~/.ssh</i> directory, an <i>id_rsa</i> file, and an <i>id_rsa.pub</i>file.
+After you have finished the ssh-keygen steps, you should check that you have an <i>~/.ssh</i> directory, an _id_rsa_ file, and an _id_rsa.pub_ file by checking the contents of the _/.ssh_ folder.
 
 The <i>id_rsa.pub</i> file is your public key (notice .pub ending) and this is the key you will provide to your remote server in the next step. DigitalOcean and other third parties will use this key as a way to verify your identity. The <i>id_rsa</i> file is your private key, you will keep this file and its cryptographic contents on your computer. You should not give this key to anyone.
 
@@ -230,30 +240,30 @@ $ cat ~/.ssh/id_rsa.pub
 
 # example public key output, actual output many lines long:
 ssh-rsa AAAAB3NzaD1fc2EAAABAQCjw....F9lXv5f/9+8YD joe@joelaptop
-
 ```
 
 In the next step we will be copying this key to a location in the directory structure of your remote server.
 
-Thus, first copy to the clipboard the public key you just generated. Then, return to the original terminal window (the one logged into the remote server). Finally, issue the following command:
+Thus, first copy to the clipboard the public key you just generated. Then, return to the **original terminal window** (the one logged into the remote server) and issue the following command:
 
 ```
 $ echo <paste-YOUR-public-key> >> ~/.ssh/authorized_keys
 # the echo command displays a line of text and combined with ">>";
-# it "displays" the line of text into the authorized_keys file
+# it copies the line of text directly into the authorized_keys file
 
 $ chmod 600 ~/.ssh/authorized_keys
+
 # chmod stands for "change mode of access"
 # chmod allows a Ubuntu/Linux user to change who
 # and how much access a user has.
+
 # 600 is an argument passed to chmod command.
 # It gives the owner full read and write access to the target file,
 # here authorized_keys, while preventing any other user
 # from accessing the file.
-
 ```
 
-Once you have entered these commands, you will be able to log into your remote server without a password. From now on, when you log into the remote server <i>ssh</i> will identify itself to the remote server and trigger a cryptographic procedure that requires a public key. The remote server then checks that the procedure is correct and that you are verified by referencing the public key which you have just provided.
+Once you have entered these commands, you will be able to log into your remote server without a password. From now on, when you log in <i>ssh</i> will identify itself to the remote server and trigger a cryptographic procedure that requires a public key. The remote server then checks that the procedure is correct and that you are verified by referencing the public key which you have just provided.
 
 To check work, you should first log out of both your <i>ssh</i> session and your remote session. Then you will attempt to login directly to your "gigaflask" account by entering, as you have done before:
 
@@ -266,7 +276,7 @@ If your work has been successful you should not have to enter a password and (de
 
 ### Server Security: First Steps
 
-We are now going to take three steps to reduce the number of methods by which an attacker could gain access to your remote server. First, we are going to disable root logins via <i>ssh</i>. Second, we are going to disable login for all accounts on the remote server. Third, and finally, we are going to install a firewall on the remote server. Firewall software protects your server by blocking access to the server on ports that are not explicitly enabled by you.
+We are now going to take three steps to reduce the number of routes by which an attacker could gain access to your remote server. First, we are going to disable root logins via <i>ssh</i>. Second, we are going to disable login for all accounts on the remote server. Third, and finally, we are going to install a firewall on the remote server. Firewall software protects your server by blocking access to the server on ports that are not explicitly enabled by you.
 
 In the next two steps, we are going to be making two small changes to the text in a configuration file located at _/etc/ssh/sshd_config_.
 
