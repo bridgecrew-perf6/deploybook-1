@@ -7,31 +7,27 @@ description: in-depth deployment tutorial for Flask, Python, Postgres, Digital O
 
 ### Hello World
 
-Welcome! You are about to start on a journey toward deploying a working web application with Python and Flask. When you have finished, the application you made will be live on the web and you will be able to access it from your phone or computer - anywhere you have internet access.
+Welcome! You are about to start on a journey toward deploying a working web application with Python and Flask. When you have finished, the application you make will be live on the web and you will be able to access it from your phone or computer - anywhere you have internet access.
 
-Both the structure and content of this book are shamelessly based on Miguel Grinberg's [Flask Mega-Tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world). While the focus of this book is on exploring and explaining the surplus of non-obvious tasks required to get a Flask application onto the internet, it should be treated as something of an extended application of the lesson in Chapter 17 of the Mega-Tutorial that provides much more context for the many, many steps of deploying.
+The goal of the first part of this book is to deploy a web application to a remote server and then configure that server so you can view your application from any web browser. The focus of our work is on serving the simplest possible secure deployment so that you can demonstrate to yourself that it is possible.
 
-The goal of the first part of this book is to deploy a web application to a remote server and then configure that server so you can view your application from any web browser anywhere in the world. The focus of our work is on serving the simplest possible secure deployment so that you can demonstrate to yourself that it is possible.
+More specifically, we will be deploying a minimal Flask application onto a Digital Ocean server and then serving it over HTTPS on Nginx and Gunicorn.
 
-More specifically, we will be deploying a minimal Flask application onto a Digital Ocean server and then serving it, over HTTPS on Nginx and Gunicorn. We will not be deploying a database as part of these first steps.
+In the interest of keeping the writing focused, the guide will be provided with the assumption that you have access to a Bash or other Linux-based terminal. I use a Windows PC with the Windows Subsystem for Linux 2 (WSL2) enabled. If you are using a Windows PC I strongly suggest that you setup a Linux environment. Recent versions of Windows can enable the environment with one line of code: see [Install WSL2](https://docs.microsoft.com/en-us/windows/wsl/install). While deployment using Powershell or the Windows commandline is certainly possible, modern web deployment proceeds on Linux and you will find that most documentation, tutorials, and tools have been created with Linux and Bash users in mind.
 
-In the interest of keeping the writing focused, the guide will be provided with the assumption that you have access to a Bash or other Linux-based terminal. I personally use a Windows PC with the Windows Subsystem for Linux 2 (WSL2) enabled. If you are using a Windows PC I strongly suggest that you setup a Linux environment. Recent versions of Windows can enable the environment with one line of code: see [Install WSL2](https://docs.microsoft.com/en-us/windows/wsl/install). While deployment using Powershell or the Windows commandline is certainly possible, modern web deployment proceeds on Linux and you will find that most of the documentation, tutorials, and tools have been created with Linux and Bash users in mind.
+Another point to mention at the outset: unfortunately, DigitalOcean and most DNS providers do charge and will require a credit or debit card to setup an active account. However, costs will be minimized: you can expect to pay around $5 per month for a DigitalOcean virtual private server(VPS) and you can register your domain name for less than $10 (there are also free options but I will not be recommending them). If this is a limitation for you, there are plenty of ways to deploy from computers that you already own. However, this is not the focus of this guide.
 
-Another point to mention at the outset: unfortunately, DigitalOcean and most DNS providers do charge and will require a credit or debit card to setup an active account. However, costs will be minimized: you can expect to pay around $5 per month for a DigitalOcean VPS and you can register your domain name for less than $10 (there are also free options but I will not be recommending them). If this is a limitation for you, there are plenty of ways to deploy from computers that you already own. However, this process is not the focus of this guide.
-
-Another assumption I am making is that you have an existing installation of Python 3 on the computer you are using for this guide. To check your installation and version, you can use:
+Another assumption I am making is that you have an existing installation of Python 3 on your computer. To check your installation and version, you can use:
 
 ```
 $ python3 --version
 ```
 
-If you have a Windows computer and have enabled WSL2, the Ubuntu distribution that WSL2 uses comes with a version of Python 3 (as of the date of this writing).
-
-There are numerous resources available that will show you the steps of installing Python so that will not be covered here.
+If you have a Windows computer and have enabled WSL2, the Ubuntu distribution that WSL2 uses comes with a version of Python 3.
 
 ### Install Flask on your Local Computer
 
-In the next step, we are going to install Flask on your computer. This step has no practical effect on your eventual deployment but it will give us a chance to practice locally some of what we will soon be doing on a remote server.
+In the next step, we are going to install Flask on your computer. This step has no practical effect on your eventual deployment but it will give us a chance to practice locally what we will soon be doing on a remote server.
 
 In this step, we will be creating a directory for our Flask app, activating a virtual environment, and writing a couple of very short Python files that will allow us to test a local Flask deployment. Finally, we will be working briefly with _git_.
 
@@ -48,13 +44,13 @@ Next we will create a virtual environment which we will call _venv_.
 $ python3 -m venv venv
 ```
 
-A virtual environment allows us to download packages for use with this, or any, single project without impacting our work in other Python projects on our computer or our remote server. If you are programming a lot in Python you will need to get into the habit of entering the following command any time you start working on a particular project.
+A virtual environment allows us to download packages for use with this, or any, single project without impacting our work in other Python projects on our computer or remote server. If you are programming a lot in Python you will need to get into the habit of entering the following command any time you start working on a particular project:
 
 ```
 $ source venv/bin/activate
 ```
 
-If this command worked, your command line will now look like this:
+If this command worked, your commandline will now look like this:
 
 ```
 (venv) $ ___
@@ -72,7 +68,7 @@ Congratulations, you have now installed Flask in a virtual environment on your l
 
 ### Minimal Flask Application
 
-In the next step, we will be making a Flask application. The structure of a Flask application, that is, the names and relative locations of files and directories inside the project folder is almost as important to Flask function as the code itself: so you will need to pay careful attention to the directory structure you've created as we go. If you named your toplevel directory structure "testdeploy" as above you're prompt should look like this (if not go there now):
+In the next step, we will be making a Flask application for practice on our local machine. The structure of a Flask application, that is, the names and relative locations of files and directories inside the project folder is almost as important to Flask function as the code itself: so you will need to pay careful attention to the directory structure you've created as we go. If you named your toplevel directory structure "testdeploy" as shown above you're prompt should look like this (if not navigate to that directory now):
 
 ```
 (venv) $ username@yourpc: ~/testdeploy
@@ -84,16 +80,14 @@ From this starting point, we are going to create a subdirectory called _app_ tha
 (venv) $ mkdir app
 ```
 
-Next create a file called _**init**.py_ inside the _app_ directory with:
+Next create a file called \_\_init\_\_.py inside the _app_ directory with:
 
 ```
 (venv) $ cd app
 (venv) $ touch __init__.py  #creates __init__.py file
 ```
 
-Now with your text editor open up the _**init**.py_ file and put in the following test:
-
-#app/**init**.py
+Now with your text editor open up the \_\_init\_\_.py file and put in the following text:
 
 ```
 from flask import Flask
@@ -103,11 +97,11 @@ app = Flask(__name__)
 from app import routes
 ```
 
-Confusingly, we have just now introduced two very different things both called app. The _/app_ directory includes the files directly related to a package that we have called here _app_ and thus this directory defines the _app_ pacakge. In the code you have written thus far, you have referred to this package in the _/app_ directory name and in the last line of the snippet of code you just wrote: "from app import routes". This line refers to the package _app_ and a file in it called _routes.py_ which we have not yet created but soon will.
+Confusingly, we have just now introduced two things named _app_: one is a directory named _app_ containing the _app_ package and the other is a Flask application object. The _/app_ directory refers to the folder containing the files directly related to the _app_ package. In the code you have written thus far, you have referred to this package in the _/app_ directory name and in the last line of the snippet of code you just wrote: "from app import routes". This line refers to the package _app_ and a file in it called _routes.py_ which we have not yet created but soon will.
 
-The other _app_ is the one referenced in the second line of code just written. THIS _app_ creates the Flask application object as an instance of class _Flask_ that we imported from the _flask_ package in the first line of the above code. By "instance of class _Flask_" and "application object", it is meant that we have packed all the functionality provided by Flask into a object that we have made immanent in our code and that we can now reference, control, make changes to, etc. The _app_ variable that is defined as an instance of the class _Flask_ in the _**init**.py_ script above is a member of the _app_ package from the paragraph above.
+The other _app_ is the one referenced in the second line of code just written("app=Flask(\_\_name\_\_)"). THIS _app_ creates the Flask application object as an instance of class Flask that we imported from the _flask_ package in the first line of the above code. A Flask application object is a datastructure that contains all the basic ingredients that YOUR particular Flask instance will use as it performs its basic functions.
 
-We will draw your attention to the peculiar import statment for the _routes_ module at the bottom of the script instead of at the top as it the common practice. We will very soon be writing the _routes.py_ file and when we do it will need access to the _app_, the Flask object kind. Since _routes.py_ need access to _app_ and _app_ needs access to _routes.py_ at almost the same instance, we have a case of circular imports. And the way we are chosing to deal with the problem of circular imports here is to wait to import _routes_ until after we have create the _app_ (ie in "app = Flask(**name**)).
+Before moving on, I will draw your attention to the peculiar import statement for the _routes_ module at the bottom of the script instead of at the top as it the common practice. We will very soon be writing the _routes.py_ file and when we do it will need access to the _app_, the Flask object kind. Since _routes.py_ needs access to _app_ and _app_ needs access to _routes.py_ at almost the same time, we have a case of circular imports. And the way we are choosing to deal with the problem of circular imports here is to wait to import _routes_ until after we have created the _app_ (ie in "app = Flask(\_\_name\_\_)).
 
 The _routes_ module will contain the different URLs that the application implements and that provide the basic structure to the application (think: a website's pages) that you and your site's visitors will experience. Thus:
 
@@ -116,8 +110,6 @@ The _routes_ module will contain the different URLs that the application impleme
 ```
 
 Then we will write the following code into _routes.py_.
-
-#/app/routes.py
 
 ```
 from app import app
@@ -142,30 +134,21 @@ The code for this section can be had at [https://github.com/redmonroe/deploy-lin
 
 ### Finding an Ubuntu Server
 
-If you would like to follow along with me, you will need to find a server to work on. As of the end of 2021, [Digital Ocean](https://www.digitalocean.com/) will provide you a Ubuntu 20.04 server for around $5 per month.  (My experience: in writing the book I made frequent changes to my server and the total cost for the month was under $4.)
+If you would like to continue along, you will need to find a server to work on. As of the end of 2021, [Digital Ocean](https://www.digitalocean.com/) will provide you a Ubuntu 20.04 server for around \$5 per month.
 
 Once you have created a new Ubuntu 20.04 server in a Digital Ocean(DO) droplet, you spend a moment to familiarize yourself with the DO administrative controls. The first step you should take to configure your server will require you to know what the IP address of your remote virtual server (what DO calls a "droplet").
 
-```
-You can find you IP address either by clicking on
-[Your-Project-Name] under "Projects" in the sidebar
-of the DO admin panel
-OR
-by clicking on "Droplets" in the sidebar of the DO admin panel.
+You can find you IP address either by clicking on [Your-Project-Name] under "Projects" in the sidebar of the DO admin panel OR by clicking on "Droplets" in the sidebar of the DO admin panel.
 
-There you will find - beneath the header "IP Address" -
-the address in the form XX.XXX.XXX.XX.
+There you will find - beneath the header "IP Address" - the address in the form XX.XXX.XXX.XX. Make sure you can find this address as you will be using it in the following sections.
 
-Make sure you can find this address as you will
-be using it in the following sections.
+Further Reading:
 
-```
-
-[do server configuration tutorial](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04)
+- [DigitalOcean server configuration tutorial](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu-20-04)
 
 ### Login via SSH
 
-Since your server is headless, you will not have a desktop interface that you may be used to on your own computer. Instead you will connect to your remote server through an SSH client and send instructions to your server via the command-line. Windows Subsystem for Linux 2 provides OpenSSH by default.
+Since your server is headless, you will not have a desktop interface that you may be used to on your own computer. Instead you will connect to your remote server from your terminal through an SSH client and send instructions to your server via the commandline. WSL2 provides SSH (OpenSSH) by default.
 
 ```
 To verify installation of OpenSSH: ssh -V
